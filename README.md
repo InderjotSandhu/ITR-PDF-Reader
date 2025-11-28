@@ -164,12 +164,10 @@ Complete structured data with:
 
 ## 📖 Documentation
 
-- **[START_HERE.md](START_HERE.md)** - Quick start guide
-- **[QUICK_START.md](QUICK_START.md)** - Detailed installation
+- **[DOCUMENTATION.md](DOCUMENTATION.md)** - Complete comprehensive guide
 - **[API Documentation](docs/API.md)** - API reference
 - **[Architecture](docs/ARCHITECTURE.md)** - System design
 - **[Output Formats](docs/OUTPUT_FORMATS.md)** - Format specifications
-- **[File Explanations](FILE_EXPLANATIONS.md)** - Complete file guide
 - **[CHANGELOG.md](CHANGELOG.md)** - Version history
 
 ---
@@ -240,7 +238,7 @@ Runs on port 3000 by default.
 - Kill the process using the port
 - Or change the port in configuration
 
-For more troubleshooting, see [RUN_COMMANDS.md](RUN_COMMANDS.md)
+For more troubleshooting, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 
@@ -282,8 +280,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For issues and questions:
 - Open an issue on GitHub
-- Check the [documentation](docs/)
-- Review [troubleshooting guide](RUN_COMMANDS.md)
+- Check the [documentation](DOCUMENTATION.md)
+- Review [troubleshooting guide](DOCUMENTATION.md#troubleshooting)
 
 ---
 
