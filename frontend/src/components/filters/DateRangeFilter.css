@@ -1,0 +1,174 @@
+.date-range-filter {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.date-range-filter.dark-mode .filter-label {
+  color: #ffffff;
+}
+
+.date-inputs-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.date-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.input-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.date-range-filter.dark-mode .input-label {
+  color: #aaa;
+}
+
+.date-input {
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  color: #333;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #4472C4;
+  box-shadow: 0 0 0 3px rgba(68, 114, 196, 0.1);
+}
+
+.date-input:focus-visible {
+  outline: 3px solid #4472C4;
+  outline-offset: 2px;
+}
+
+.date-input.error {
+  border-color: #ff4444;
+}
+
+.date-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
+.date-range-filter.dark-mode .date-input {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #555;
+  color: #ffffff;
+  color-scheme: dark;
+}
+
+.date-range-filter.dark-mode .date-input:focus {
+  border-color: #7B9FFF;
+  box-shadow: 0 0 0 3px rgba(123, 159, 255, 0.1);
+}
+
+.date-range-filter.dark-mode .date-input:focus-visible {
+  outline-color: #7B9FFF;
+}
+
+.date-range-filter.dark-mode .date-input.error {
+  border-color: #ff6666;
+}
+
+.date-separator {
+  color: #666;
+  font-size: 0.95rem;
+  margin-top: 1.5rem;
+  flex-shrink: 0;
+}
+
+.date-range-filter.dark-mode .date-separator {
+  color: #aaa;
+}
+
+.clear-button {
+  background: #ff4444;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1.5rem;
+}
+
+.clear-button:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
+.clear-button:active {
+  transform: scale(0.95);
+}
+
+.clear-button:focus-visible {
+  outline: 3px solid #4472C4;
+  outline-offset: 2px;
+}
+
+.date-range-filter.dark-mode .clear-button:focus-visible {
+  outline-color: #7B9FFF;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.date-range-filter.dark-mode .error-message {
+  color: #ff6666;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .date-inputs-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-input-wrapper {
+    min-width: 100%;
+  }
+
+  .date-separator {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .clear-button {
+    margin-top: 0;
+    align-self: center;
+  }
+}

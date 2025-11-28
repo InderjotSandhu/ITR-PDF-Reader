@@ -3,7 +3,7 @@ import axios from 'axios';
 import './PDFUploader.css';
 import ProgressBar from './ProgressBar';
 
-const PDFUploader = ({ darkMode }) => {
+const PDFUploader = ({ darkMode, onExtractionComplete }) => {
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +19,7 @@ const PDFUploader = ({ darkMode }) => {
     transactions: true,
     holdings: true
   });
+  const [extractionMode, setExtractionMode] = useState('filter'); // 'filter' or 'download'
   const fileInputRef = useRef(null);
 
   const handleFileSelection = (selectedFile) => {
@@ -73,6 +74,7 @@ const PDFUploader = ({ darkMode }) => {
     setProgress(0);
     setSummary(null);
     setOutputFormat('excel');
+    setExtractionMode('filter');
     setSelectedSheets({
       portfolio: true,
       transactions: true,
@@ -107,100 +109,151 @@ const PDFUploader = ({ darkMode }) => {
       if (password) {
         formData.append('password', password);
       }
-      formData.append('outputFormat', outputFormat);
-      
-      // Add selected sheets for Excel format
-      if (outputFormat === 'excel') {
-        const sheets = Object.keys(selectedSheets).filter(key => selectedSheets[key]);
-        formData.append('sheets', JSON.stringify(sheets));
-      }
 
       setStatus('Extracting text from PDF...');
       setProgress(30);
 
-      const response = await axios.post('/api/extract-cas', formData, {
-        responseType: 'blob',
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setProgress(Math.min(percentCompleted, 25));
+      // Use different endpoint based on extraction mode
+      if (extractionMode === 'filter') {
+        // Extract data for filtering (returns JSON)
+        const response = await axios.post('/api/extract-cas-data', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setProgress(Math.min(percentCompleted, 25));
+          }
+        });
+
+        setStatus('Parsing portfolio data...');
+        setProgress(60);
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setStatus('Extracting transactions...');
+        setProgress(80);
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setStatus('Preparing data for filtering...');
+        setProgress(95);
+
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        setStatus('Complete! Ready to filter and analyze.');
+        setProgress(100);
+
+        // Debug logging
+        console.log('PDFUploader: Extraction complete');
+        console.log('PDFUploader: Response data structure:', {
+          hasData: !!response.data,
+          hasTransactions: !!response.data?.transactions,
+          transactionsIsArray: Array.isArray(response.data?.transactions),
+          transactionCount: response.data?.transactions?.length,
+          hasMetadata: !!response.data?.metadata,
+          hasSummary: !!response.data?.metadata?.summary
+        });
+
+        // Call the onExtractionComplete callback with the data
+        if (onExtractionComplete) {
+          onExtractionComplete(response.data);
         }
-      });
 
-      setStatus('Parsing portfolio data...');
-      setProgress(60);
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      setStatus('Extracting transactions...');
-      setProgress(80);
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const statusText = outputFormat === 'excel' ? 'Generating Excel report...' : 
-                         outputFormat === 'json' ? 'Generating JSON file...' : 
-                         'Generating text file...';
-      setStatus(statusText);
-      setProgress(95);
-
-      // Determine MIME type based on format
-      let mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      let defaultFilename = 'CAS_Report.xlsx';
-      
-      if (outputFormat === 'json') {
-        mimeType = 'application/json';
-        defaultFilename = 'CAS_Data.json';
-      } else if (outputFormat === 'text') {
-        mimeType = 'text/plain';
-        defaultFilename = 'CAS_Extracted.txt';
-      }
-
-      // Create download link with proper MIME type
-      const blob = new Blob([response.data], { type: mimeType });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Extract filename from response headers or use default
-      const contentDisposition = response.headers['content-disposition'];
-      let filename = defaultFilename;
-      if (contentDisposition) {
-        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-        if (filenameMatch && filenameMatch[1]) {
-          filename = filenameMatch[1].replace(/['"]/g, '');
+      } else {
+        // Download mode - generate file and download
+        formData.append('outputFormat', outputFormat);
+        
+        // Add selected sheets for Excel format
+        if (outputFormat === 'excel') {
+          const sheets = Object.keys(selectedSheets).filter(key => selectedSheets[key]);
+          formData.append('sheets', JSON.stringify(sheets));
         }
+
+        const response = await axios.post('/api/extract-cas', formData, {
+          responseType: 'blob',
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setProgress(Math.min(percentCompleted, 25));
+          }
+        });
+
+        setStatus('Parsing portfolio data...');
+        setProgress(60);
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setStatus('Extracting transactions...');
+        setProgress(80);
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const statusText = outputFormat === 'excel' ? 'Generating Excel report...' : 
+                           outputFormat === 'json' ? 'Generating JSON file...' : 
+                           'Generating text file...';
+        setStatus(statusText);
+        setProgress(95);
+
+        // Determine MIME type based on format
+        let mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        let defaultFilename = 'CAS_Report.xlsx';
+        
+        if (outputFormat === 'json') {
+          mimeType = 'application/json';
+          defaultFilename = 'CAS_Data.json';
+        } else if (outputFormat === 'text') {
+          mimeType = 'text/plain';
+          defaultFilename = 'CAS_Extracted.txt';
+        }
+
+        // Create download link with proper MIME type
+        const blob = new Blob([response.data], { type: mimeType });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Extract filename from response headers or use default
+        const contentDisposition = response.headers['content-disposition'];
+        let filename = defaultFilename;
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+          if (filenameMatch && filenameMatch[1]) {
+            filename = filenameMatch[1].replace(/['"]/g, '');
+          }
+        }
+        
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          link.remove();
+          window.URL.revokeObjectURL(url);
+        }, 100);
+
+        const completeText = outputFormat === 'excel' ? 'Complete! Excel file downloaded.' :
+                            outputFormat === 'json' ? 'Complete! JSON file downloaded.' :
+                            'Complete! Text file downloaded.';
+        setStatus(completeText);
+        setProgress(100);
+
+        // Show success summary
+        setSummary({
+          success: true,
+          message: 'Extraction completed successfully!',
+          filename: filename,
+          format: outputFormat
+        });
+
+        // Clear file after successful extraction
+        setTimeout(() => {
+          clearFile();
+        }, 5000);
       }
-      
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      
-      // Cleanup
-      setTimeout(() => {
-        link.remove();
-        window.URL.revokeObjectURL(url);
-      }, 100);
-
-      const completeText = outputFormat === 'excel' ? 'Complete! Excel file downloaded.' :
-                          outputFormat === 'json' ? 'Complete! JSON file downloaded.' :
-                          'Complete! Text file downloaded.';
-      setStatus(completeText);
-      setProgress(100);
-
-      // Show success summary
-      setSummary({
-        success: true,
-        message: 'Extraction completed successfully!',
-        filename: filename,
-        format: outputFormat
-      });
-
-      // Clear file after successful extraction
-      setTimeout(() => {
-        clearFile();
-      }, 5000);
 
     } catch (err) {
       console.error('Upload error:', err);
@@ -211,13 +264,19 @@ const PDFUploader = ({ darkMode }) => {
         if (err.response.status === 400) {
           errorMessage = 'Invalid file or missing data. Please upload a valid CAS PDF.';
         } else if (err.response.status === 500) {
-          // Try to extract error message from blob
-          try {
-            const text = await err.response.data.text();
-            const errorData = JSON.parse(text);
-            errorMessage = errorData.message || errorMessage;
-          } catch (e) {
-            // If parsing fails, use default message
+          if (err.response.data) {
+            // Try to extract error message
+            if (err.response.data.message) {
+              errorMessage = err.response.data.message;
+            } else if (err.response.data.text) {
+              try {
+                const text = await err.response.data.text();
+                const errorData = JSON.parse(text);
+                errorMessage = errorData.message || errorMessage;
+              } catch (e) {
+                // If parsing fails, use default message
+              }
+            }
           }
         }
       } else if (err.request) {
@@ -312,79 +371,114 @@ const PDFUploader = ({ darkMode }) => {
 
         {file && !loading && !summary && (
           <div className="options-section">
-            <div className="format-selection">
-              <label>Output Format:</label>
-              <div className="format-options">
-                <label className="format-option">
+            <div className="mode-selection">
+              <label>What would you like to do?</label>
+              <div className="mode-options">
+                <label className="mode-option">
                   <input
                     type="radio"
-                    name="format"
-                    value="excel"
-                    checked={outputFormat === 'excel'}
-                    onChange={(e) => setOutputFormat(e.target.value)}
+                    name="mode"
+                    value="filter"
+                    checked={extractionMode === 'filter'}
+                    onChange={(e) => setExtractionMode(e.target.value)}
                   />
-                  <span>📊 Excel</span>
+                  <span>🔍 Filter & Analyze Data</span>
+                  <small>Extract and filter transactions before exporting</small>
                 </label>
-                <label className="format-option">
+                <label className="mode-option">
                   <input
                     type="radio"
-                    name="format"
-                    value="json"
-                    checked={outputFormat === 'json'}
-                    onChange={(e) => setOutputFormat(e.target.value)}
+                    name="mode"
+                    value="download"
+                    checked={extractionMode === 'download'}
+                    onChange={(e) => setExtractionMode(e.target.value)}
                   />
-                  <span>📦 JSON</span>
-                </label>
-                <label className="format-option">
-                  <input
-                    type="radio"
-                    name="format"
-                    value="text"
-                    checked={outputFormat === 'text'}
-                    onChange={(e) => setOutputFormat(e.target.value)}
-                  />
-                  <span>📝 Text</span>
+                  <span>📥 Direct Download</span>
+                  <small>Extract and download immediately</small>
                 </label>
               </div>
             </div>
 
-            {outputFormat === 'excel' && (
-              <div className="sheet-selection">
-                <label>Select Sheets to Generate:</label>
-                <div className="sheet-options">
-                  <label className="sheet-option">
-                    <input
-                      type="checkbox"
-                      checked={selectedSheets.portfolio}
-                      onChange={() => handleSheetToggle('portfolio')}
-                    />
-                    <span>Portfolio Summary</span>
-                  </label>
-                  <label className="sheet-option">
-                    <input
-                      type="checkbox"
-                      checked={selectedSheets.transactions}
-                      onChange={() => handleSheetToggle('transactions')}
-                    />
-                    <span>Transactions</span>
-                  </label>
-                  <label className="sheet-option">
-                    <input
-                      type="checkbox"
-                      checked={selectedSheets.holdings}
-                      onChange={() => handleSheetToggle('holdings')}
-                    />
-                    <span>MF Holdings</span>
-                  </label>
+            {extractionMode === 'download' && (
+              <>
+                <div className="format-selection">
+                  <label>Output Format:</label>
+                  <div className="format-options">
+                    <label className="format-option">
+                      <input
+                        type="radio"
+                        name="format"
+                        value="excel"
+                        checked={outputFormat === 'excel'}
+                        onChange={(e) => setOutputFormat(e.target.value)}
+                      />
+                      <span>📊 Excel</span>
+                    </label>
+                    <label className="format-option">
+                      <input
+                        type="radio"
+                        name="format"
+                        value="json"
+                        checked={outputFormat === 'json'}
+                        onChange={(e) => setOutputFormat(e.target.value)}
+                      />
+                      <span>📦 JSON</span>
+                    </label>
+                    <label className="format-option">
+                      <input
+                        type="radio"
+                        name="format"
+                        value="text"
+                        checked={outputFormat === 'text'}
+                        onChange={(e) => setOutputFormat(e.target.value)}
+                      />
+                      <span>📝 Text</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
+
+                {outputFormat === 'excel' && (
+                  <div className="sheet-selection">
+                    <label>Select Sheets to Generate:</label>
+                    <div className="sheet-options">
+                      <label className="sheet-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedSheets.portfolio}
+                          onChange={() => handleSheetToggle('portfolio')}
+                        />
+                        <span>Portfolio Summary</span>
+                      </label>
+                      <label className="sheet-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedSheets.transactions}
+                          onChange={() => handleSheetToggle('transactions')}
+                        />
+                        <span>Transactions</span>
+                      </label>
+                      <label className="sheet-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedSheets.holdings}
+                          onChange={() => handleSheetToggle('holdings')}
+                        />
+                        <span>MF Holdings</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
 
         {file && !loading && !summary && (
           <button className="upload-button" onClick={handleUpload}>
-            🚀 Extract & Generate {outputFormat === 'excel' ? 'Excel' : outputFormat === 'json' ? 'JSON' : 'Text'}
+            {extractionMode === 'filter' 
+              ? '🔍 Extract & Filter Data' 
+              : `🚀 Extract & Generate ${outputFormat === 'excel' ? 'Excel' : outputFormat === 'json' ? 'JSON' : 'Text'}`
+            }
           </button>
         )}
 

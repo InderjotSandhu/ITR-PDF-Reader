@@ -2,8 +2,8 @@
 
 > **One comprehensive guide for everything you need to know about ITR_Complete**
 
-**Version**: 1.4.0  
-**Last Updated**: November 28, 2025
+**Version**: 1.5.0  
+**Last Updated**: November 29, 2025
 
 ---
 
@@ -14,15 +14,16 @@
 3. [Running the Application](#running-the-application)
 4. [Using the Application](#using-the-application)
 5. [Features](#features)
-6. [Output Formats](#output-formats)
-7. [API Documentation](#api-documentation)
-8. [Architecture](#architecture)
-9. [File Structure](#file-structure)
-10. [Commands Reference](#commands-reference)
-11. [Troubleshooting](#troubleshooting)
-12. [Development](#development)
-13. [Testing](#testing)
-14. [Contributing](#contributing)
+6. [Filtering and Search](#filtering-and-search)
+7. [Output Formats](#output-formats)
+8. [API Documentation](#api-documentation)
+9. [Architecture](#architecture)
+10. [File Structure](#file-structure)
+11. [Commands Reference](#commands-reference)
+12. [Troubleshooting](#troubleshooting)
+13. [Development](#development)
+14. [Testing](#testing)
+15. [Contributing](#contributing)
 
 ---
 
@@ -56,6 +57,7 @@
 3. **Use Application** (1 minute)
    - Open http://localhost:3000
    - Upload CAS PDF
+   - Filter and search transactions (optional)
    - Download Excel report
 
 **That's it!** 🎉
@@ -172,8 +174,17 @@ You can now view itr-complete-frontend in the browser.
    - Watch real-time progress
    - Wait for completion
 
-7. **Download Report**
-   - File downloads automatically
+7. **Filter and Search** (optional, NEW in v1.5.0)
+   - Use search bar to find specific schemes
+   - Apply date range filter for specific time periods
+   - Select transaction types to filter
+   - Choose folio number to view specific accounts
+   - Set amount range to find transactions by value
+   - Combine multiple filters for precise analysis
+   - View and remove active filters using tags
+
+8. **Download Report**
+   - File downloads automatically (filtered or complete data)
    - Check your Downloads folder
 
 ### Tips for Best Results
@@ -275,6 +286,267 @@ const financial = transactions.filter(tx => !tx.isAdministrative);
 // Filter only administrative transactions
 const admin = transactions.filter(tx => tx.isAdministrative);
 ```
+
+---
+
+## 🔍 Filtering and Search
+
+### Overview
+
+The Advanced Filtering and Search feature (v1.5.0) allows you to interactively filter and search through extracted transaction data before exporting. This enables focused analysis and reduces the need for post-processing in Excel.
+
+### Filter Types
+
+#### 1. Search Bar
+
+**Purpose**: Find transactions by scheme name
+
+**How to Use**:
+1. Type scheme name in the search box
+2. Results update automatically (300ms debounce)
+3. Search is case-insensitive
+4. Matches partial scheme names
+
+**Example**:
+- Search "HDFC" → Shows all HDFC fund transactions
+- Search "equity" → Shows all equity fund transactions
+
+**Features**:
+- Real-time search with debouncing
+- Case-insensitive matching
+- Substring matching (finds "HDFC" in "HDFC Equity Fund")
+- Clear button to reset search
+
+#### 2. Date Range Filter
+
+**Purpose**: View transactions within a specific time period
+
+**How to Use**:
+1. Select start date (optional)
+2. Select end date (optional)
+3. Filter applies automatically
+4. Clear to reset
+
+**Validation**:
+- End date must be after start date
+- Error message displays for invalid ranges
+- Both dates are inclusive
+
+**Use Cases**:
+- View transactions for a financial year
+- Analyze quarterly performance
+- Find transactions in a specific month
+
+#### 3. Transaction Type Filter
+
+**Purpose**: Filter by transaction category
+
+**How to Use**:
+1. Check one or more transaction types
+2. Results show transactions matching ANY selected type
+3. Uncheck all to show all transactions
+
+**Available Types**:
+- Purchase
+- Redemption
+- SIP (Systematic Investment Plan)
+- Switch-In
+- Switch-Out
+- Dividend
+- And more (based on your data)
+
+**Features**:
+- Multi-select support
+- "Select All" / "Deselect All" options
+- Shows only types present in your data
+
+#### 4. Folio Filter
+
+**Purpose**: View transactions for a specific investment account
+
+**How to Use**:
+1. Select folio number from dropdown
+2. View transactions for that folio only
+3. Select "All Folios" to reset
+
+**Features**:
+- Dropdown shows all unique folio numbers
+- Easy switching between accounts
+- Clear indication of selected folio
+
+**Use Cases**:
+- Track specific investment account
+- Separate family member accounts
+- Analyze individual portfolio performance
+
+#### 5. Amount Range Filter
+
+**Purpose**: Find transactions within specific amount ranges
+
+**How to Use**:
+1. Enter minimum amount (optional)
+2. Enter maximum amount (optional)
+3. Filter applies automatically
+
+**Validation**:
+- Only numeric values accepted
+- Maximum must be greater than minimum
+- Error messages for invalid input
+
+**Use Cases**:
+- Find large transactions (>₹50,000)
+- Find small transactions (<₹10,000)
+- Identify transactions in specific range
+
+**Examples**:
+- Min: 10000, Max: 50000 → Shows transactions between ₹10,000 and ₹50,000
+- Min: 100000, Max: (empty) → Shows transactions ≥ ₹100,000
+- Min: (empty), Max: 5000 → Shows transactions ≤ ₹5,000
+
+### Combining Filters
+
+**Multi-Filter Support**: All filters work together with AND logic
+
+**Example Scenario**:
+```
+Search: "HDFC"
+Date Range: Jan 2024 - Mar 2024
+Transaction Type: Purchase, SIP
+Amount Range: Min ₹5,000
+
+Result: Shows HDFC fund purchases and SIPs 
+        between Jan-Mar 2024 with amount ≥ ₹5,000
+```
+
+**Filter Behavior**:
+- Adding filters narrows results (fewer transactions)
+- Removing filters expands results (more transactions)
+- All filters must match (AND logic)
+
+### Active Filters
+
+**Visual Indicators**: See which filters are currently applied
+
+**Features**:
+- Filter tags show name and value
+- Click × to remove individual filter
+- Total count of active filters displayed
+- "Clear All Filters" button to reset everything
+
+**Example Display**:
+```
+Active Filters (3):
+[Date: Jan-Mar 2024 ×] [Type: Purchase ×] [Amount: >5000 ×]
+```
+
+### Filter Results
+
+**Result Display**:
+- Shows count: "Showing X of Y transactions"
+- Updates in real-time as filters change
+- Empty state: "No transactions match your filters"
+
+**Performance**:
+- Filters apply in <100ms for <1000 transactions
+- Filters apply in <500ms for <10,000 transactions
+- Virtual scrolling for large datasets
+- Smooth, responsive UI
+
+### Exporting Filtered Data
+
+**How It Works**:
+1. Apply your desired filters
+2. Click export button
+3. Only filtered transactions are exported
+4. Filter metadata included in export
+
+**Export Formats**:
+- **Excel**: Filtered transactions in all sheets
+- **JSON**: Filtered data with filter metadata
+- **Text**: Filtered raw data
+
+**Filter Metadata** (in JSON/Excel):
+```json
+{
+  "filterMetadata": {
+    "appliedAt": "2025-11-29T10:30:00.000Z",
+    "filters": {
+      "dateRange": "01-Jan-2024 to 31-Mar-2024",
+      "transactionTypes": ["Purchase", "SIP"],
+      "searchQuery": "HDFC",
+      "amountRange": "Min: 5000"
+    },
+    "originalCount": 1234,
+    "filteredCount": 45
+  }
+}
+```
+
+### Tips for Effective Filtering
+
+1. **Start Broad, Then Narrow**
+   - Begin with one filter
+   - Add more filters to refine results
+   - Remove filters that are too restrictive
+
+2. **Use Search for Quick Finds**
+   - Fastest way to find specific schemes
+   - Combine with other filters for precision
+
+3. **Date Ranges for Time Analysis**
+   - Financial year: Apr 1 - Mar 31
+   - Quarterly: 3-month periods
+   - Monthly: First to last day of month
+
+4. **Amount Ranges for Value Analysis**
+   - Large transactions: Min ₹50,000
+   - Small transactions: Max ₹10,000
+   - Mid-range: ₹10,000 - ₹50,000
+
+5. **Transaction Types for Category Analysis**
+   - Investments: Purchase + SIP
+   - Withdrawals: Redemption + Switch-Out
+   - Income: Dividend
+
+### Keyboard Shortcuts
+
+- **Tab**: Navigate between filter controls
+- **Enter**: Apply filter (in input fields)
+- **Escape**: Clear search (when focused)
+
+### Troubleshooting Filters
+
+#### Issue: "No results found"
+**Solutions**:
+- Check if filters are too restrictive
+- Remove one filter at a time
+- Verify date range is correct
+- Check amount range values
+
+#### Issue: "Invalid date range"
+**Solution**:
+- Ensure end date is after start date
+- Check date format is correct
+- Clear and re-enter dates
+
+#### Issue: "Invalid amount range"
+**Solution**:
+- Enter only numeric values
+- Ensure max is greater than min
+- Remove commas or currency symbols
+
+#### Issue: Filters not applying
+**Solution**:
+- Refresh the page
+- Re-upload PDF and extract
+- Check browser console for errors
+
+#### Issue: Slow performance
+**Solution**:
+- Reduce number of active filters
+- Use more specific filters
+- Close other browser tabs
+- For very large datasets (>10,000 transactions), filtering may take a few seconds
 
 ---
 
@@ -502,7 +774,24 @@ ITR_Complete/
 │   └── src/
 │       ├── App.js            # Main component
 │       ├── App.css           # Styles
-│       └── components/       # React components
+│       ├── components/       # React components
+│       │   ├── filters/      # Filter components (NEW v1.5.0)
+│       │   │   ├── FilterPanel.js
+│       │   │   ├── SearchBar.js
+│       │   │   ├── DateRangeFilter.js
+│       │   │   ├── TransactionTypeFilter.js
+│       │   │   ├── FolioFilter.js
+│       │   │   ├── AmountRangeFilter.js
+│       │   │   └── ActiveFilters.js
+│       │   └── table/        # Table components (NEW v1.5.0)
+│       │       └── TransactionTable.js
+│       ├── context/          # React context (NEW v1.5.0)
+│       │   └── FilterContext.js
+│       ├── utils/            # Utility functions (NEW v1.5.0)
+│       │   ├── filterUtils.js
+│       │   └── filterMetadata.js
+│       └── types/            # Type definitions (NEW v1.5.0)
+│           └── filters.js
 │
 └── docs/                      # Additional documentation
     ├── API.md                # Detailed API docs
@@ -618,6 +907,34 @@ npm install
 - Check file isn't corrupted
 - Try opening with Google Sheets
 
+#### Issue: "Filters not working"
+**Solution**:
+- Ensure data is extracted first
+- Refresh the page and try again
+- Check browser console for errors
+- Clear browser cache
+
+#### Issue: "Filtered export contains all data"
+**Solution**:
+- Verify filters are applied (check active filter tags)
+- Ensure you see filtered count before exporting
+- Try applying filters again
+- Check that filter values are valid
+
+#### Issue: "Search not finding transactions"
+**Solution**:
+- Check spelling of scheme name
+- Try partial name (e.g., "HDFC" instead of full name)
+- Search is case-insensitive, but check for typos
+- Ensure transactions exist with that scheme name
+
+#### Issue: "Date filter showing wrong results"
+**Solution**:
+- Verify date format is correct
+- Check that end date is after start date
+- Ensure dates are within your data range
+- Clear and re-apply date filter
+
 ---
 
 ## 👨‍💻 Development
@@ -672,8 +989,8 @@ npm install
 
 ### Test Structure
 
-- **50+ Unit Tests** - Core functionality
-- **41 Property-Based Tests** - 4,100+ generated cases
+- **70+ Unit Tests** - Core functionality and filtering
+- **59 Property-Based Tests** - 5,900+ generated cases
 - **16 Integration Tests** - Full pipeline
 
 ### Running Tests
@@ -699,10 +1016,24 @@ npm test -- --silent
 
 ### Test Files
 
+**Backend Tests**:
 - `transactionExtractor.test.js` - Unit tests
 - `transactionExtractor.property.test.js` - Property-based tests
 - `transactionExtractor.integration.test.js` - Integration tests
 - `casRoutes.test.js` - API route tests
+
+**Frontend Tests** (NEW v1.5.0):
+- `filterUtils.test.js` - Filter logic unit tests
+- `FilterContext.test.js` - Context unit tests
+- `SearchBar.test.js` - Search component tests
+- `DateRangeFilter.test.js` - Date filter tests
+- `TransactionTypeFilter.test.js` - Type filter tests
+- `FolioFilter.test.js` - Folio filter tests
+- `AmountRangeFilter.test.js` - Amount filter tests
+- `ActiveFilters.test.js` - Active filters tests
+- `FilterPanel.test.js` - Filter panel tests
+- `TransactionTable.test.js` - Table component tests
+- `exportProperties.test.js` - Export property tests
 
 ---
 
@@ -771,5 +1102,5 @@ npm test -- --silent
 
 **Made with ❤️ by Inderjot Sandhu**
 
-**Version**: 1.4.0  
-**Last Updated**: November 28, 2025
+**Version**: 1.5.0  
+**Last Updated**: November 29, 2025

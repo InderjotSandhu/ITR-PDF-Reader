@@ -1655,7 +1655,16 @@ Closing Unit Balance: 1000.000`;
       
       await fc.assert(
         fc.asyncProperty(
-          fc.stringMatching(/^\d{2}-[A-Za-z]{3}-\d{4}$/),
+          fc.record({
+            day: fc.integer({ min: 1, max: 28 }),
+            month: fc.oneof(
+              fc.constant('Jan'), fc.constant('Feb'), fc.constant('Mar'),
+              fc.constant('Apr'), fc.constant('May'), fc.constant('Jun'),
+              fc.constant('Jul'), fc.constant('Aug'), fc.constant('Sep'),
+              fc.constant('Oct'), fc.constant('Nov'), fc.constant('Dec')
+            ),
+            year: fc.integer({ min: 2020, max: 2024 })
+          }).map(({ day, month, year }) => `${String(day).padStart(2, '0')}-${month}-${year}`),
           fc.float({ min: 100, max: 10000 }).filter(n => !isNaN(n)),
           fc.float({ min: 10, max: 100 }).filter(n => !isNaN(n)),
           fc.float({ min: 1, max: 1000 }).filter(n => !isNaN(n)),
@@ -1709,17 +1718,18 @@ Closing Unit Balance: 1000.000`;
               
               // Property: Financial transaction should have values
               const financialRow = worksheet.getRow(2);
-              expect(financialRow.getCell(6).value).toBeCloseTo(amount, 2);
-              expect(financialRow.getCell(7).value).toBeCloseTo(nav, 4);
-              expect(financialRow.getCell(8).value).toBeCloseTo(units, 3);
-              expect(financialRow.getCell(9).value).toBeCloseTo(balance, 3);
+              expect(financialRow.getCell(6).value).toBeCloseTo(amount, 2); // Credit Amount
+              expect(financialRow.getCell(8).value).toBeCloseTo(nav, 4); // NAV
+              expect(financialRow.getCell(9).value).toBeCloseTo(units, 3); // Units
+              expect(financialRow.getCell(10).value).toBeCloseTo(balance, 3); // Unit Balance
               
               // Property: Administrative transaction should have null/empty values
               const adminRow = worksheet.getRow(3);
-              expect([null, '', undefined]).toContain(adminRow.getCell(6).value);
-              expect([null, '', undefined]).toContain(adminRow.getCell(7).value);
-              expect([null, '', undefined]).toContain(adminRow.getCell(8).value);
-              expect([null, '', undefined]).toContain(adminRow.getCell(9).value);
+              expect([null, '', undefined]).toContain(adminRow.getCell(6).value); // Credit Amount
+              expect([null, '', undefined]).toContain(adminRow.getCell(7).value); // Debit Amount
+              expect([null, '', undefined]).toContain(adminRow.getCell(8).value); // NAV
+              expect([null, '', undefined]).toContain(adminRow.getCell(9).value); // Units
+              expect([null, '', undefined]).toContain(adminRow.getCell(10).value); // Unit Balance
               
             } finally {
               // Clean up test file

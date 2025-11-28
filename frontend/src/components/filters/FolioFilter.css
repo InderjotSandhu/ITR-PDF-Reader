@@ -1,0 +1,151 @@
+.folio-filter {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.folio-filter.dark-mode .filter-label {
+  color: #ffffff;
+}
+
+.clear-button-small {
+  background: #ff4444;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.clear-button-small:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
+.clear-button-small:active {
+  transform: scale(0.95);
+}
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.folio-select {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.folio-select:hover {
+  border-color: #4472C4;
+}
+
+.folio-select:focus {
+  outline: none;
+  border-color: #4472C4;
+  box-shadow: 0 0 0 3px rgba(68, 114, 196, 0.1);
+}
+
+.folio-select:focus-visible {
+  outline: 3px solid #4472C4;
+  outline-offset: 2px;
+}
+
+.folio-filter.dark-mode .folio-select {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #555;
+  color: #ffffff;
+}
+
+.folio-filter.dark-mode .folio-select:hover {
+  border-color: #7B9FFF;
+}
+
+.folio-filter.dark-mode .folio-select:focus {
+  border-color: #7B9FFF;
+  box-shadow: 0 0 0 3px rgba(123, 159, 255, 0.1);
+}
+
+.folio-filter.dark-mode .folio-select:focus-visible {
+  outline-color: #7B9FFF;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
+  font-size: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.folio-filter.dark-mode .select-arrow {
+  color: #999;
+}
+
+.folio-select:hover ~ .select-arrow {
+  color: #4472C4;
+}
+
+.folio-filter.dark-mode .folio-select:hover ~ .select-arrow {
+  color: #7B9FFF;
+}
+
+/* Option styling */
+.folio-select option {
+  padding: 0.5rem;
+  background: white;
+  color: #333;
+}
+
+.folio-filter.dark-mode .folio-select option {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+.folio-select option:disabled {
+  color: #999;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .folio-select {
+    padding: 0.65rem 2rem 0.65rem 0.85rem;
+    font-size: 0.9rem;
+  }
+}

@@ -6,14 +6,24 @@ const ExcelJS = require('exceljs');
  * @param {Object} transactionData - Fund transactions data
  * @param {string} outputPath - Path to save Excel file
  * @param {Array<string>} sheets - Array of sheet names to generate ['portfolio', 'transactions', 'holdings']
+ * @param {Object} filterMetadata - Optional filter metadata to include in report
  * @returns {Promise<string>} - Path to generated Excel file
  */
-async function generateExcelReport(portfolioData, transactionData, outputPath, sheets = ['portfolio', 'transactions', 'holdings']) {
+async function generateExcelReport(portfolioData, transactionData, outputPath, sheets = ['portfolio', 'transactions', 'holdings'], filterMetadata = null) {
   try {
     console.log('Starting Excel report generation...');
     console.log('Selected sheets:', sheets);
+    if (filterMetadata) {
+      console.log('Filter metadata included:', filterMetadata.filteredCount, 'of', filterMetadata.originalCount, 'transactions');
+    }
     
     const workbook = new ExcelJS.Workbook();
+    
+    // Add filter summary sheet if metadata exists
+    if (filterMetadata) {
+      generateFilterSummarySheet(workbook, filterMetadata);
+      console.log('✓ Filter Summary sheet created');
+    }
     
     // Sheet 1: Portfolio Summary
     if (sheets.includes('portfolio')) {
@@ -43,6 +53,87 @@ async function generateExcelReport(portfolioData, transactionData, outputPath, s
     console.error('Error generating Excel report:', error.message);
     throw new Error(`Failed to generate Excel report: ${error.message}`);
   }
+}
+
+/**
+ * Generates Filter Summary sheet
+ */
+function generateFilterSummarySheet(workbook, filterMetadata) {
+  const worksheet = workbook.addWorksheet('Filter Summary');
+  
+  // Set column widths
+  worksheet.columns = [
+    { key: 'label', width: 25 },
+    { key: 'value', width: 50 }
+  ];
+  
+  // Add title
+  worksheet.addRow({ label: 'FILTER SUMMARY', value: '' });
+  worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: 'FF4472C4' } };
+  worksheet.addRow({});
+  
+  // Add metadata
+  worksheet.addRow({ 
+    label: 'Applied At:', 
+    value: new Date(filterMetadata.appliedAt).toLocaleString('en-IN') 
+  });
+  
+  worksheet.addRow({ 
+    label: 'Original Transactions:', 
+    value: filterMetadata.originalCount 
+  });
+  
+  worksheet.addRow({ 
+    label: 'Filtered Transactions:', 
+    value: filterMetadata.filteredCount 
+  });
+  
+  worksheet.addRow({ 
+    label: 'Percentage:', 
+    value: `${((filterMetadata.filteredCount / filterMetadata.originalCount) * 100).toFixed(1)}%` 
+  });
+  
+  worksheet.addRow({});
+  
+  // Add active filters
+  if (Object.keys(filterMetadata.filters).length === 0) {
+    worksheet.addRow({ label: 'Active Filters:', value: 'None' });
+  } else {
+    worksheet.addRow({ label: 'Active Filters:', value: '' });
+    worksheet.getRow(worksheet.lastRow.number).font = { bold: true };
+    
+    if (filterMetadata.filters.dateRange) {
+      worksheet.addRow({ label: '  Date Range:', value: filterMetadata.filters.dateRange });
+    }
+    
+    if (filterMetadata.filters.transactionTypes) {
+      worksheet.addRow({ 
+        label: '  Transaction Types:', 
+        value: filterMetadata.filters.transactionTypes.join(', ') 
+      });
+    }
+    
+    if (filterMetadata.filters.searchQuery) {
+      worksheet.addRow({ label: '  Search Query:', value: filterMetadata.filters.searchQuery });
+    }
+    
+    if (filterMetadata.filters.folioNumber) {
+      worksheet.addRow({ label: '  Folio Number:', value: filterMetadata.filters.folioNumber });
+    }
+    
+    if (filterMetadata.filters.amountRange) {
+      worksheet.addRow({ label: '  Amount Range:', value: filterMetadata.filters.amountRange });
+    }
+  }
+  
+  // Style the sheet
+  worksheet.eachRow((row, rowNumber) => {
+    if (rowNumber > 1) {
+      row.getCell(1).font = { bold: true };
+      row.getCell(1).alignment = { horizontal: 'left' };
+      row.getCell(2).alignment = { horizontal: 'left' };
+    }
+  });
 }
 
 /**

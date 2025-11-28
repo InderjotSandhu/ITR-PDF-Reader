@@ -605,3 +605,233 @@
     text-align: center;
   }
 }
+
+/* Mode Selection Styles */
+.mode-selection {
+  margin-bottom: 1.5rem;
+}
+
+.mode-selection label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.pdf-uploader.dark-mode .mode-selection label {
+  color: #fff;
+}
+
+.mode-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mode-option {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pdf-uploader.dark-mode .mode-option {
+  border-color: #3a3a5a;
+}
+
+.mode-option:hover {
+  border-color: #4472C4;
+  background: rgba(68, 114, 196, 0.05);
+}
+
+.pdf-uploader.dark-mode .mode-option:hover {
+  border-color: #7B9FFF;
+  background: rgba(123, 159, 255, 0.1);
+}
+
+.mode-option input[type="radio"] {
+  margin-right: 0.75rem;
+}
+
+.mode-option span {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.pdf-uploader.dark-mode .mode-option span {
+  color: #fff;
+}
+
+.mode-option small {
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 1.75rem;
+}
+
+.pdf-uploader.dark-mode .mode-option small {
+  color: #aaa;
+}
+
+.mode-option input[type="radio"]:checked + span {
+  color: #4472C4;
+}
+
+.pdf-uploader.dark-mode .mode-option input[type="radio"]:checked + span {
+  color: #7B9FFF;
+}
+
+.mode-option:has(input[type="radio"]:checked) {
+  border-color: #4472C4;
+  background: rgba(68, 114, 196, 0.1);
+}
+
+.pdf-uploader.dark-mode .mode-option:has(input[type="radio"]:checked) {
+  border-color: #7B9FFF;
+  background: rgba(123, 159, 255, 0.15);
+}
+
+/* Options Section Styles */
+.options-section {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+.pdf-uploader.dark-mode .options-section {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.format-selection,
+.sheet-selection {
+  margin-bottom: 1.5rem;
+}
+
+.format-selection:last-child,
+.sheet-selection:last-child {
+  margin-bottom: 0;
+}
+
+.format-selection label,
+.sheet-selection label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.pdf-uploader.dark-mode .format-selection label,
+.pdf-uploader.dark-mode .sheet-selection label {
+  color: #fff;
+}
+
+.format-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.format-option {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pdf-uploader.dark-mode .format-option {
+  border-color: #3a3a5a;
+}
+
+.format-option:hover {
+  border-color: #4472C4;
+  background: rgba(68, 114, 196, 0.05);
+}
+
+.pdf-uploader.dark-mode .format-option:hover {
+  border-color: #7B9FFF;
+  background: rgba(123, 159, 255, 0.1);
+}
+
+.format-option input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.format-option span {
+  font-weight: 500;
+  color: #333;
+}
+
+.pdf-uploader.dark-mode .format-option span {
+  color: #fff;
+}
+
+.format-option:has(input[type="radio"]:checked) {
+  border-color: #4472C4;
+  background: rgba(68, 114, 196, 0.1);
+}
+
+.pdf-uploader.dark-mode .format-option:has(input[type="radio"]:checked) {
+  border-color: #7B9FFF;
+  background: rgba(123, 159, 255, 0.15);
+}
+
+.sheet-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sheet-option {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pdf-uploader.dark-mode .sheet-option {
+  border-color: #3a3a5a;
+}
+
+.sheet-option:hover {
+  background: rgba(68, 114, 196, 0.05);
+}
+
+.pdf-uploader.dark-mode .sheet-option:hover {
+  background: rgba(123, 159, 255, 0.1);
+}
+
+.sheet-option input[type="checkbox"] {
+  margin-right: 0.75rem;
+}
+
+.sheet-option span {
+  color: #333;
+}
+
+.pdf-uploader.dark-mode .sheet-option span {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .format-options {
+    flex-direction: column;
+  }
+  
+  .mode-options {
+    gap: 0.75rem;
+  }
+  
+  .mode-option {
+    padding: 0.75rem;
+  }
+}

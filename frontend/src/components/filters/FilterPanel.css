@@ -1,0 +1,251 @@
+.filter-panel {
+  width: 100%;
+  max-width: 400px;
+  height: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-panel.dark-mode {
+  background: rgba(30, 30, 50, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Header */
+.filter-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.filter-panel.dark-mode .filter-panel-header {
+  border-bottom-color: #444;
+}
+
+.filter-panel-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4472C4;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-panel.dark-mode .filter-panel-title {
+  color: #7B9FFF;
+}
+
+.filter-count-badge {
+  background: #4472C4;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.filter-panel.dark-mode .filter-count-badge {
+  background: #7B9FFF;
+  color: #1e1e32;
+}
+
+.filter-panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clear-all-filters-button {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.clear-all-filters-button:hover {
+  background: #cc0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+}
+
+.clear-all-filters-button:active {
+  transform: translateY(0);
+}
+
+.clear-all-filters-button:focus-visible {
+  outline: 3px solid #4472C4;
+  outline-offset: 2px;
+}
+
+.filter-panel.dark-mode .clear-all-filters-button:focus-visible {
+  outline-color: #7B9FFF;
+}
+
+.collapse-toggle {
+  display: none;
+  background: transparent;
+  border: 2px solid #4472C4;
+  color: #4472C4;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-panel.dark-mode .collapse-toggle {
+  border-color: #7B9FFF;
+  color: #7B9FFF;
+}
+
+.collapse-toggle:hover {
+  background: #4472C4;
+  color: white;
+  transform: scale(1.05);
+}
+
+.filter-panel.dark-mode .collapse-toggle:hover {
+  background: #7B9FFF;
+  color: #1e1e32;
+}
+
+.collapse-toggle:focus-visible {
+  outline: 3px solid #4472C4;
+  outline-offset: 2px;
+}
+
+.filter-panel.dark-mode .collapse-toggle:focus-visible {
+  outline-color: #7B9FFF;
+}
+
+/* Content */
+.filter-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Collapsed state */
+.filter-panel.collapsed .filter-panel-content {
+  display: none;
+}
+
+.filter-panel.collapsed {
+  padding: 1rem;
+}
+
+.filter-panel.collapsed .filter-panel-header {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Responsive design - Tablet */
+@media (max-width: 1024px) {
+  .filter-panel {
+    max-width: 100%;
+  }
+}
+
+/* Responsive design - Mobile */
+@media (max-width: 768px) {
+  .filter-panel {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .filter-panel-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .filter-panel-title {
+    font-size: 1.25rem;
+  }
+
+  .collapse-toggle {
+    display: flex;
+  }
+
+  .filter-panel-content {
+    gap: 1.25rem;
+  }
+
+  .clear-all-filters-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Make collapsed state more compact on mobile */
+  .filter-panel.collapsed {
+    padding: 0.75rem;
+  }
+
+  .filter-panel.collapsed .filter-panel-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Responsive design - Small mobile */
+@media (max-width: 480px) {
+  .filter-panel {
+    padding: 0.75rem;
+  }
+
+  .filter-panel-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter-panel-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .clear-all-filters-button {
+    flex: 1;
+  }
+
+  .filter-count-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+/* Animation for content expansion/collapse */
+@media (prefers-reduced-motion: no-preference) {
+  .filter-panel-content {
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

@@ -134,8 +134,10 @@ function validateTransaction(transaction) {
     }
   }
   
-  // Note: We no longer validate transaction type against a predefined list
-  // since transactionType now contains the actual description from the CAS statement
+  // Validate and correct transaction type if invalid
+  if (transaction.transactionType) {
+    transaction.transactionType = validateTransactionType(transaction.transactionType);
+  }
   
   if (errors.length > 0) {
     console.warn('Transaction validation errors:', errors.join(', '));
@@ -222,7 +224,9 @@ function extractISINInfo(folioText) {
     let fullName = schemeMatch[1].trim();
     // Remove scheme code prefix (e.g., "G357-", "B205RG-", etc.)
     // Pattern: letters+digits+optional letters followed by hyphen at the start
-    const withoutPrefix = fullName.replace(/^[A-Z]+\d+[A-Z]*-/, '');
+    // Use a more specific pattern that requires at least 2 letters or 3 total characters before the hyphen
+    // This prevents matching patterns like "A0-" within the scheme name
+    const withoutPrefix = fullName.replace(/^[A-Z]{2,}\d+[A-Z]*-|^[A-Z]\d{2,}[A-Z]*-/, '');
     schemeName = withoutPrefix.trim();
   }
   
@@ -369,10 +373,10 @@ function parseTransactions(folioText) {
         const classification = classifyTransactionType(description);
         
         // For administrative transactions:
-        // - Transaction Type: Use cleaned description (remove *** markers)
-        // - Description: Preserve the original text from CAS statement
-        const finalTransactionType = cleanTransactionType(description);  // Clean the transaction type
-        const finalDescription = description;  // Preserve original description text
+        // - Transaction Type: Use the classified type from classifyTransactionType
+        // - Description: Preserve the original text from CAS statement exactly as it appears
+        const finalTransactionType = classification.type;  // Use classified type
+        const finalDescription = description;  // Preserve original description with *** markers
         
         // Requirements 1.4, 2.5: Set NAV, units, and unitBalance to null for administrative transactions
         // Requirement 4.2, 4.3, 4.4, 4.5: Maintain consistent structure with explicit null values
@@ -499,8 +503,8 @@ function parseTransactions(folioText) {
     // Ensure description is never empty - use transaction type as fallback
     const finalDescription = description.trim() || classification.type;
     
-    // Clean the transaction type by removing unnecessary symbols
-    const finalTransactionType = cleanTransactionType(finalDescription);
+    // Use the classified transaction type
+    const finalTransactionType = classification.type;
     
     // Requirement 4.2, 4.3, 4.4, 4.5: Ensure consistent structure for all transaction types
     // All transactions must have the same fields in the same order
@@ -510,7 +514,7 @@ function parseTransactions(folioText) {
         amount,                        // May be null for administrative transactions (Requirement 4.2)
         nav,                           // May be null for administrative transactions (Requirement 4.2)
         units,                         // May be null for administrative transactions (Requirement 4.2)
-        transactionType: finalTransactionType,  // Use cleaned description as transaction type
+        transactionType: finalTransactionType,  // Use classified type from classifyTransactionType
         unitBalance,                   // May be null for administrative transactions (Requirement 4.2)
         description: finalDescription,  // Always present, preserved exactly (Requirement 4.3)
         isAdministrative: classification.isAdministrative  // Flag to indicate if transaction is administrative

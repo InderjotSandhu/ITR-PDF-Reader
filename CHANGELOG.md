@@ -2,6 +2,228 @@
 
 All notable changes and features of the ITR Complete - CAS Data Extractor project.
 
+## [1.5.0] - 2025-11-29
+
+### 🔍 Advanced Filtering and Search
+
+A comprehensive filtering and search system that allows users to interactively filter and search through extracted transaction data before exporting.
+
+#### New Features
+
+##### Filter Types
+- **Search Bar**
+  - Real-time search by scheme name
+  - Case-insensitive substring matching
+  - 300ms debounce for smooth performance
+  - Clear button for quick reset
+
+- **Date Range Filter**
+  - Filter transactions by start and end dates
+  - Inclusive date ranges
+  - Date validation (end date must be after start date)
+  - Error messages for invalid ranges
+  - Support for partial ranges (only start or only end)
+
+- **Transaction Type Filter**
+  - Multi-select checkbox interface
+  - Filter by Purchase, Redemption, SIP, Switch-In, Switch-Out, Dividend, etc.
+  - "Select All" / "Deselect All" functionality
+  - Shows only transaction types present in data
+  - OR logic for multiple selections
+
+- **Folio Filter**
+  - Dropdown selection of unique folio numbers
+  - View transactions for specific investment accounts
+  - "All Folios" option to reset
+  - Dynamic options based on extracted data
+
+- **Amount Range Filter**
+  - Filter by minimum and/or maximum amount
+  - Numeric validation
+  - Range validation (min <= max)
+  - Support for partial ranges (only min or only max)
+  - Error messages for invalid input
+
+##### Multi-Filter Support
+- **Combined Filtering**
+  - Apply multiple filters simultaneously
+  - AND logic for filter combination
+  - Adding filters narrows results
+  - Removing filters expands results
+  - Real-time result updates
+
+- **Active Filter Tags**
+  - Visual indicators showing applied filters
+  - Display filter name and value
+  - One-click removal (× button)
+  - Total count of active filters
+  - "Clear All Filters" button
+
+##### Filter Context & State Management
+- **React Context API**
+  - Centralized filter state management
+  - `FilterProvider` component
+  - `useFilters` custom hook
+  - Efficient state updates
+  - Filter persistence during UI interactions
+
+##### Filtered Export
+- **Export with Filters**
+  - Export only filtered transactions
+  - Maintains selected output format (Excel, JSON, Text)
+  - Includes filter metadata in exports
+  - Filter criteria summary in metadata
+  - Original and filtered counts
+
+- **Filter Metadata**
+  - Applied timestamp
+  - Filter criteria details
+  - Original transaction count
+  - Filtered transaction count
+  - Included in JSON and Excel exports
+
+##### Performance Optimizations
+- **Efficient Filtering**
+  - React.useMemo for filter results
+  - Memoized filter options generation
+  - <100ms for <1000 transactions
+  - <500ms for <10,000 transactions
+
+- **Virtual Scrolling**
+  - react-window integration
+  - Handles large datasets (1000+ transactions)
+  - Smooth scrolling performance
+  - Reduced memory footprint
+
+##### User Interface
+- **FilterPanel Component**
+  - Container for all filter controls
+  - Responsive design (desktop, tablet, mobile)
+  - Collapsible on mobile devices
+  - Consistent styling with app theme
+  - Dark mode support
+
+- **TransactionTable Component**
+  - Displays filtered transactions
+  - Result count display ("Showing X of Y transactions")
+  - Loading indicator
+  - Empty state message ("No transactions match your filters")
+  - Responsive table with horizontal scroll on mobile
+
+- **Input Validation**
+  - Date range validation with error messages
+  - Amount range validation with error messages
+  - Numeric input validation
+  - Real-time validation feedback
+
+##### Accessibility
+- **ARIA Support**
+  - ARIA labels for all filter controls
+  - Role attributes for semantic HTML
+  - aria-describedby for error messages
+  - Screen reader friendly
+
+- **Keyboard Navigation**
+  - Logical tab order
+  - Keyboard shortcuts for common actions
+  - Full keyboard accessibility
+  - Focus management
+
+#### Testing
+
+##### Property-Based Tests (18 new properties)
+- Property 1: Date range filter completeness
+- Property 2: Filter clearing returns to original state
+- Property 3: Transaction type filter accuracy
+- Property 4: Available filter options completeness
+- Property 5: Search case-insensitivity
+- Property 6: Search query substring matching
+- Property 7: Folio filter exactness
+- Property 8: Amount range filter boundaries
+- Property 9: Multiple filter conjunction (AND logic)
+- Property 10: Filter addition narrows results
+- Property 11: Filter removal expands results
+- Property 12: Result count accuracy
+- Property 13: Export data matches filtered view
+- Property 14: Export format preservation
+- Property 15: Export metadata includes filter criteria
+- Property 16: Clear all filters resets state
+- Property 17: Active filter indicators match applied filters
+- Property 18: Individual filter removal precision
+
+##### Unit Tests (20+ new tests)
+- Filter logic tests (applyFilters function)
+- Component rendering tests
+- User interaction tests
+- Input validation tests
+- Error handling tests
+- Export integration tests
+
+##### Test Coverage
+- 70+ total unit tests (was 50+)
+- 59 total property-based tests (was 41)
+- 5,900+ generated test cases (was 4,100+)
+- 100+ iterations per property test
+
+#### Technical Implementation
+
+##### New Dependencies
+- `date-fns` - Date manipulation and formatting
+- `react-window` - Virtual scrolling for large datasets
+
+##### New Files
+**Components**:
+- `frontend/src/components/filters/FilterPanel.js`
+- `frontend/src/components/filters/SearchBar.js`
+- `frontend/src/components/filters/DateRangeFilter.js`
+- `frontend/src/components/filters/TransactionTypeFilter.js`
+- `frontend/src/components/filters/FolioFilter.js`
+- `frontend/src/components/filters/AmountRangeFilter.js`
+- `frontend/src/components/filters/ActiveFilters.js`
+- `frontend/src/components/table/TransactionTable.js`
+
+**Context & Utils**:
+- `frontend/src/context/FilterContext.js`
+- `frontend/src/utils/filterUtils.js`
+- `frontend/src/utils/filterMetadata.js`
+
+**Types**:
+- `frontend/src/types/filters.js`
+
+**Tests**:
+- `frontend/src/utils/filterUtils.test.js`
+- `frontend/src/context/FilterContext.test.js`
+- `frontend/src/components/filters/*.test.js`
+- `frontend/src/components/table/TransactionTable.test.js`
+- `frontend/src/utils/__tests__/exportProperties.test.js`
+
+**Styles**:
+- `frontend/src/components/filters/*.css`
+- `frontend/src/components/table/TransactionTable.css`
+
+##### Architecture Changes
+- Added filtering phase between extraction and export
+- Client-side filtering (no backend changes)
+- React Context for state management
+- Memoization for performance
+- Virtual scrolling for large datasets
+
+#### Breaking Changes
+- None. All changes are additive and backward compatible.
+
+#### Bug Fixes
+- None. This is a new feature release.
+
+#### Documentation Updates
+- Updated README.md with filtering features
+- Updated DOCUMENTATION.md with comprehensive filtering guide
+- Added filtering section to table of contents
+- Updated troubleshooting section with filter-related issues
+- Updated file structure documentation
+- Updated test coverage statistics
+
+---
+
 ## [1.4.0] - 2025-11-24
 
 ### 🚀 Excel Report Improvements & Bug Fixes
