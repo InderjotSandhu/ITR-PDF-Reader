@@ -112,10 +112,11 @@
 
 .filter-tag-value {
   color: #333;
-  max-width: 200px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  word-break: break-word;
 }
 
 .active-filters.dark-mode .filter-tag-value {

@@ -125,7 +125,7 @@
 /* Filter View Styles */
 .filter-view {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -277,8 +277,8 @@
 
 .filter-content {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
   align-items: start;
 }
 

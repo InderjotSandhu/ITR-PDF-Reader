@@ -120,7 +120,6 @@ const DateRangeFilter = ({ value, onChange, darkMode }) => {
             aria-describedby={error ? 'date-range-error' : 'date-range-label'}
           />
         </div>
-        <span className="date-separator" aria-hidden="true">to</span>
         <div className="date-input-wrapper">
           <label htmlFor="end-date" className="input-label">To</label>
           <input
