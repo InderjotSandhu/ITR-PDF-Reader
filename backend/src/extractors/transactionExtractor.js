@@ -134,10 +134,7 @@ function validateTransaction(transaction) {
     }
   }
   
-  // Validate and correct transaction type if invalid
-  if (transaction.transactionType) {
-    transaction.transactionType = validateTransactionType(transaction.transactionType);
-  }
+  // Skip transaction type validation - we want to use cleaned descriptions as transaction types
   
   if (errors.length > 0) {
     console.warn('Transaction validation errors:', errors.join(', '));
@@ -369,13 +366,10 @@ function parseTransactions(folioText) {
       
       // If we found a date, create the administrative transaction
       if (date) {
-        // Classify the transaction to determine if it's administrative
-        const classification = classifyTransactionType(description);
-        
         // For administrative transactions:
-        // - Transaction Type: Use the classified type from classifyTransactionType
+        // - Transaction Type: Use the cleaned description (remove *** markers)
         // - Description: Preserve the original text from CAS statement exactly as it appears
-        const finalTransactionType = classification.type;  // Use classified type
+        const finalTransactionType = cleanTransactionType(description);  // Use cleaned description
         const finalDescription = description;  // Preserve original description with *** markers
         
         // Requirements 1.4, 2.5: Set NAV, units, and unitBalance to null for administrative transactions
@@ -497,14 +491,12 @@ function parseTransactions(folioText) {
       description = restOfLine;
     }
     
-    // Classify transaction type based on the extracted description
-    const classification = classifyTransactionType(description);
+    // For financial transactions: Use cleaned description as transaction type
+    // Ensure description is never empty - use "Purchase" as fallback
+    const finalDescription = description.trim() || 'Purchase';
     
-    // Ensure description is never empty - use transaction type as fallback
-    const finalDescription = description.trim() || classification.type;
-    
-    // Use the classified transaction type
-    const finalTransactionType = classification.type;
+    // Use the cleaned description as transaction type (remove leading * markers)
+    const finalTransactionType = cleanTransactionType(finalDescription);
     
     // Requirement 4.2, 4.3, 4.4, 4.5: Ensure consistent structure for all transaction types
     // All transactions must have the same fields in the same order
@@ -514,10 +506,10 @@ function parseTransactions(folioText) {
         amount,                        // May be null for administrative transactions (Requirement 4.2)
         nav,                           // May be null for administrative transactions (Requirement 4.2)
         units,                         // May be null for administrative transactions (Requirement 4.2)
-        transactionType: finalTransactionType,  // Use classified type from classifyTransactionType
+        transactionType: finalTransactionType,  // Use cleaned description as transaction type
         unitBalance,                   // May be null for administrative transactions (Requirement 4.2)
         description: finalDescription,  // Always present, preserved exactly (Requirement 4.3)
-        isAdministrative: classification.isAdministrative  // Flag to indicate if transaction is administrative
+        isAdministrative: false  // Financial transactions are not administrative
       };
       
       // Validate transaction before adding
