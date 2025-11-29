@@ -22,9 +22,10 @@ function parseNumericValue(value) {
   return isNaN(parsed) ? null : (isNegative ? -parsed : parsed);
 }
 
-// Valid transaction types for validation
+// Valid transaction types for financial transactions
+// Note: Administrative transactions (marked with ***) can have any type based on their description
+// Common admin types include: "Stamp Duty", "STT Paid", "Nominee Registration", "Address Update", etc.
 const VALID_TRANSACTION_TYPES = [
-  'Administrative',
   'Stamp Duty',
   'STT Paid',
   'Systematic Investment',
@@ -62,10 +63,9 @@ function classifyTransactionType(description) {
   // FIRST CHECK: Administrative transactions marked with *** (Requirements 3.1, 3.2, 3.3)
   // This check must come first to ensure administrative transactions are never misclassified
   if (description.includes('***')) {
-    // Most specific patterns first (Requirement 3.3)
-    if (desc.includes('stamp duty')) return { type: 'Stamp Duty', isAdministrative: true };
-    if (desc.includes('stt paid') || desc.includes('stt')) return { type: 'STT Paid', isAdministrative: true };
-    return { type: 'Administrative', isAdministrative: true };
+    // Use cleaned description as transaction type (removes *** markers)
+    // This automatically handles "Stamp Duty", "STT Paid", and any other admin transaction types
+    return { type: cleanTransactionType(description), isAdministrative: true };
   }
   
   // SECOND CHECK: Keyword-based classification for financial transactions (Requirement 3.2)
@@ -95,7 +95,14 @@ function classifyTransactionType(description) {
 }
 
 // Validate transaction type
-function validateTransactionType(transactionType) {
+// Note: Administrative transactions can have any description as their type,
+// so we only validate known financial transaction types
+function validateTransactionType(transactionType, isAdministrative = false) {
+  // Skip validation for administrative transactions - they can have any type
+  if (isAdministrative) {
+    return transactionType;
+  }
+  
   if (!VALID_TRANSACTION_TYPES.includes(transactionType)) {
     console.warn(`Invalid transaction type detected: "${transactionType}". Defaulting to "Purchase".`);
     return 'Purchase';
@@ -134,7 +141,13 @@ function validateTransaction(transaction) {
     }
   }
   
-  // Skip transaction type validation - we want to use cleaned descriptions as transaction types
+  // Validate transaction type (administrative transactions are allowed any type)
+  if (transaction.transactionType) {
+    transaction.transactionType = validateTransactionType(
+      transaction.transactionType, 
+      transaction.isAdministrative
+    );
+  }
   
   if (errors.length > 0) {
     console.warn('Transaction validation errors:', errors.join(', '));
