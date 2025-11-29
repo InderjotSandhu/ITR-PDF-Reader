@@ -2,7 +2,7 @@
 
 > **One comprehensive guide for everything you need to know about ITR_Complete**
 
-**Version**: 1.5.0  
+**Version**: 1.6.0  
 **Last Updated**: November 29, 2025
 
 ---
@@ -227,6 +227,52 @@ You can now view itr-complete-frontend in the browser.
 - **Progress Bar**: Visual feedback
 - **Status Messages**: Know what's happening
 - **Percentage**: 0-100% completion
+
+### Latest Improvements (v1.6.0)
+
+#### 1. Financial Transaction Classification
+**What**: Transactions are now properly classified by type instead of using raw descriptions
+
+**Benefits**:
+- Transaction Type Filter works correctly for all types
+- Standardized categories: Purchase, Systematic Investment, Redemption, Switch-Out, Switch-In, Dividend
+- Better data accuracy and filtering capabilities
+
+**Example**:
+```
+Before: Transaction Type = "*Switch-Out - To ABSL Small Cap Fund Growth"
+After:  Transaction Type = "Switch-Out"
+        Description = "*Switch-Out - To ABSL Small Cap Fund Growth"
+```
+
+#### 2. Scheme Name Display
+**What**: Transaction table now displays scheme names correctly
+
+**Fix**: Corrected data path from `fund.schemeName` to `folio.schemeName`
+
+**Impact**:
+- Scheme column now shows actual fund names
+- Scheme-based filtering works properly
+- Better transaction context and analysis
+
+#### 3. UI Layout Improvements
+**What**: Multiple UI enhancements for better usability
+
+**Improvements**:
+- Wider transaction table (1600px max-width) for more data visibility
+- Optimized filter sidebar (280px) for better space utilization
+- Fixed date range filter duplicate "to" text
+- Fixed scheme name overflow in filter tags
+- Fixed search bar overflow issues
+- Fixed search bar clear button alignment
+
+**Impact**:
+- More professional appearance
+- Better use of screen space
+- Improved readability and usability
+- All elements fit properly within their containers
+
+---
 
 ### Advanced Features (v1.4.0)
 
@@ -1102,5 +1148,5 @@ npm test -- --silent
 
 **Made with ❤️ by Inderjot Sandhu**
 
-**Version**: 1.5.0  
+**Version**: 1.6.0  
 **Last Updated**: November 29, 2025
