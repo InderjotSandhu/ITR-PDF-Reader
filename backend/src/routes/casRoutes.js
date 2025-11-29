@@ -235,9 +235,9 @@ router.post('/extract-cas-data', upload.single('pdf'), async (req, res) => {
           folio.transactions.forEach(transaction => {
             allTransactions.push({
               ...transaction,
-              schemeName: fund.schemeName,
-              folioNumber: folio.folioNumber,
-              isin: fund.isin || ''
+              schemeName: folio.schemeName || '',
+              folioNumber: folio.folioNumber || '',
+              isin: folio.isin || ''
             });
           });
         }
