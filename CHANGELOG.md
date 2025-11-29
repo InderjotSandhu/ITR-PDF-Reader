@@ -2,6 +2,130 @@
 
 All notable changes and features of the ITR Complete - CAS Data Extractor project.
 
+## [1.6.0] - 2025-11-29
+
+### 🐛 Bug Fixes & UI Improvements
+
+#### Financial Transaction Classification Fix
+**Problem:** Financial transactions were not being properly classified by type. All transactions were using raw description text as the transaction type instead of standardized categories.
+
+**Solution:**
+- Modified `transactionExtractor.js` to call `classifyTransactionType()` for financial transactions
+- Transactions now properly classified as: Purchase, Systematic Investment, Redemption, Switch-Out, Switch-In, Dividend
+- Transaction type is now separate from description field
+- Description field preserves original CAS text
+
+**Impact:**
+- Transaction Type Filter now works correctly for all transaction types
+- Data accuracy improved with standardized transaction types
+- Better filtering and analysis capabilities
+
+**Files Modified:**
+- `backend/src/extractors/transactionExtractor.js`
+- `backend/tests/test-description-extraction.js`
+- `backend/tests/test-mixed-transactions.js`
+
+**New Test File:**
+- `backend/tests/test-financial-classification.js` - Comprehensive test covering all transaction types
+
+---
+
+#### Scheme Name Display Fix
+**Problem:** Transaction table "Scheme" column was empty - scheme names were not being displayed.
+
+**Root Cause:** Backend was trying to access `fund.schemeName` which doesn't exist. Scheme name is stored at `folio.schemeName`.
+
+**Solution:**
+- Fixed `/api/extract-cas-data` endpoint in `casRoutes.js`
+- Changed from `fund.schemeName` to `folio.schemeName`
+- Also fixed `isin` to use `folio.isin` for consistency
+
+**Impact:**
+- Transaction table now displays correct scheme names
+- Scheme-based filtering works correctly
+- Exported files include proper scheme names
+
+**Files Modified:**
+- `backend/src/routes/casRoutes.js`
+
+---
+
+#### UI Layout Improvements
+**Problem:** Transaction table was too narrow, making it difficult to view all data. Multiple UI issues with filters.
+
+**Solutions:**
+
+1. **Wider Transaction Table Layout**
+   - Increased filter view max-width from `1400px` to `1600px`
+   - Reduced filter sidebar width from `320px` to `280px`
+   - Reduced gap between sidebar and table from `2rem` to `1.5rem`
+   - Increased scheme column max-width from `300px` to `400px`
+
+2. **Date Range Filter - Duplicate "to" Text Fix**
+   - Removed duplicate "to" separator between date inputs
+   - Kept "From" and "To" labels on input fields
+   - Cleaner, less confusing interface
+
+3. **Active Filter Tags - Scheme Name Overflow Fix**
+   - Reduced filter tag value max-width from `200px` to `180px`
+   - Added `word-break: break-word` for edge cases
+   - Long scheme names now display with ellipsis (`...`)
+
+4. **Search Bar Overflow Fix**
+   - Changed filter panel from fixed `max-width: 400px` to `max-width: 100%`
+   - Added `max-width: 100%` and `overflow: hidden` to search input container
+   - Made search input properly flexible with `min-width: 0`
+   - Optimized icon and button sizes to save space
+   - Reduced padding throughout for better space utilization
+
+5. **Search Bar Clear Button Alignment**
+   - Fixed vertical alignment of clear button (was too low)
+   - Added `margin-top: -2px` to align with search icon and text
+   - Button now properly centered in search bar
+
+**Files Modified:**
+- `frontend/src/App.css`
+- `frontend/src/components/table/TransactionTable.css`
+- `frontend/src/components/filters/DateRangeFilter.js`
+- `frontend/src/components/filters/ActiveFilters.css`
+- `frontend/src/components/filters/FilterPanel.css`
+- `frontend/src/components/filters/SearchBar.css`
+
+**Impact:**
+- More horizontal space for displaying transaction data
+- All filter elements fit properly within 280px sidebar
+- Cleaner, more professional appearance
+- Better user experience across all screen sizes
+
+---
+
+### 📝 Documentation
+
+**New Documentation Files:**
+- `FINANCIAL_TRANSACTION_FIX.md` - Details of transaction classification fix
+- `SCHEME_NAME_FIX.md` - Details of scheme name display fix
+- `UI_LAYOUT_IMPROVEMENTS.md` - Summary of all UI improvements
+- `SEARCH_BAR_FIX.md` - Details of search bar overflow and alignment fixes
+
+---
+
+### 🔧 Technical Details
+
+**Commits:**
+1. `778da2a` - Fix administrative transaction classification
+2. `0e48153` - Fix financial transaction classification
+3. `ba6664c` - Fix scheme name display in transaction table
+4. `0e0d46f` - UI improvements: wider table, fix date filter, fix filter tags
+5. `03478e0` - Fix search bar overflow in filter panel
+6. `af0a86f` - Fix search bar clear button vertical alignment
+
+**Testing:**
+- All existing tests pass
+- New test file validates all transaction type classifications
+- Manual testing confirms UI improvements work across screen sizes
+
+---
+
 ## [1.5.0] - 2025-11-29
 
 ### 🎯 Transaction Type Extraction Improvements
