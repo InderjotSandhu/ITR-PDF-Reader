@@ -79,6 +79,7 @@
 }
 
 .clear-button {
+  margin-top: 0;
   background: #ff4444;
   color: white;
   border: none;
