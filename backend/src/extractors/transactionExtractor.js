@@ -504,12 +504,12 @@ function parseTransactions(folioText) {
       description = restOfLine;
     }
     
-    // For financial transactions: Use cleaned description as transaction type
+    // For financial transactions: Classify the transaction type based on description
     // Ensure description is never empty - use "Purchase" as fallback
     const finalDescription = description.trim() || 'Purchase';
     
-    // Use the cleaned description as transaction type (remove leading * markers)
-    const finalTransactionType = cleanTransactionType(finalDescription);
+    // Classify the transaction type using the classification function
+    const { type: finalTransactionType } = classifyTransactionType(finalDescription);
     
     // Requirement 4.2, 4.3, 4.4, 4.5: Ensure consistent structure for all transaction types
     // All transactions must have the same fields in the same order

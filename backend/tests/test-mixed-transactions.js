@@ -1,4 +1,4 @@
-const { generateExcelReport } = require('./src/extractors/excelGenerator');
+const { generateExcelReport } = require('../src/extractors/excelGenerator');
 const ExcelJS = require('exceljs');
 const path = require('path');
 const fs = require('fs');

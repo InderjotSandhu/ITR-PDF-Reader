@@ -1,4 +1,4 @@
-const { parseTransactions } = require('./src/extractors/transactionExtractor');
+const { parseTransactions } = require('../src/extractors/transactionExtractor');
 
 // Test case from user's example
 const folioText = `Opening Unit Balance: 12871.468
