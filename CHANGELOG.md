@@ -4,6 +4,27 @@ All notable changes and features of the ITR Complete - CAS Data Extractor projec
 
 ## [1.5.0] - 2025-11-29
 
+### 🎯 Transaction Type Extraction Improvements
+
+**Enhanced Transaction Type Accuracy**
+- Transaction types now use cleaned descriptions instead of classification
+- Administrative transactions use cleaned description (removes *** markers) as transaction type
+- Financial transactions use full cleaned description (removes * markers) as transaction type
+- Provides more detailed and accurate transaction types reflecting actual CAS content
+- No information loss through classification into predefined categories
+- Better data accuracy for analysis and reporting
+
+**Technical Changes**
+- Modified `transactionExtractor.js` to use `cleanTransactionType()` for both admin and financial transactions
+- Disabled transaction type validation to allow custom transaction types
+- Added `cleanTransactionType` to module exports for testing
+- Organized test files into `backend/tests/` directory
+
+**Benefits**
+- More descriptive transaction types (e.g., "Systematic Investment Transmission In From F. No. 91087611846 On" instead of just "Systematic Investment")
+- Easier to track specific transaction patterns
+- Better data fidelity to original CAS statements
+
 ### 🔍 Advanced Filtering and Search
 
 A comprehensive filtering and search system that allows users to interactively filter and search through extracted transaction data before exporting.

@@ -2,7 +2,7 @@
 
 > **A comprehensive full-stack application for extracting and analyzing mutual fund data from Consolidated Account Statement (CAS) PDFs**
 
-[![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)](https://github.com/InderjotSandhu/ITR-PDF-Reader)
+[![Version](https://img.shields.io/badge/version-1.5.1-blue.svg)](https://github.com/InderjotSandhu/ITR-PDF-Reader)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/react-18.0.0-blue.svg)](https://reactjs.org/)
@@ -21,7 +21,7 @@
 ### Advanced Features
 - ✨ **Credit/Debit Split** - Separate columns for credit and debit transactions
 - 🎯 **Multi-line Support** - Correctly extracts descriptions spanning multiple lines
-- 🏷️ **Transaction Cleaning** - Removes unnecessary symbols (*** and *) from transaction types
+- 🏷️ **Accurate Transaction Types** - Uses cleaned descriptions as transaction types for maximum detail
 - 🔍 **DIRECT Advisor Support** - Handles both ARN codes and DIRECT plans
 - 📋 **Administrative Transactions** - Properly identifies and flags admin transactions
 - 🎨 **Dark Mode** - Easy on the eyes interface

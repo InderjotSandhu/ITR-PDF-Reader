@@ -242,28 +242,36 @@ fundNames.forEach(fundName => {
 //     Identifies: Stamp Duty, STT Paid, and *** marked transactions
 ```
 
-#### 4. Transaction Classification
+#### 4. Transaction Type Extraction (Updated in v1.5.0)
 ```javascript
-classifyTransactionType(description) {
-  // Check for keywords:
-  // - "***" markers → Administrative
-  //   - "stamp duty" → Stamp Duty
-  //   - "stt paid" → STT Paid
-  //   - Other *** → Administrative
-  // - "systematic investment" → SIP
-  // - "redemption" → Redemption
-  // - "switch-in/out" → Switch
-  // - "dividend" → Dividend
-  // - Default → Purchase
+// NEW: Transaction types now use cleaned descriptions instead of classification
+// This provides more accurate and detailed transaction types
+
+cleanTransactionType(description) {
+  // Remove *** markers from administrative transactions
+  // Remove leading * from financial transactions
+  // Returns the cleaned description as transaction type
 }
 
+// For Administrative Transactions (with *** markers):
+// - Transaction Type: Cleaned description (e.g., "Stamp Duty", "Status Change")
+// - Description: Original text preserved (e.g., "*** Stamp Duty ***")
+// - isAdministrative: true
+
+// For Financial Transactions:
+// - Transaction Type: Full cleaned description 
+//   (e.g., "Systematic Investment Transmission In From F. No. 91087611846 On")
+// - Description: Same as transaction type
+// - isAdministrative: false
+
+// Benefits:
+// - More detailed transaction types reflecting actual CAS content
+// - No loss of information through classification
+// - Easier to track specific transaction patterns
+// - Better data accuracy for analysis
+
 // Administrative Transaction Detection
-isAdministrative = (
-  transactionType === 'Stamp Duty' || 
-  transactionType === 'STT Paid' || 
-  transactionType === 'Administrative' ||
-  description.includes('***')
-);
+isAdministrative = description.includes('***');
 ```
 
 ### Pattern Matching Features
