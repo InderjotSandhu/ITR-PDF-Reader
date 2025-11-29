@@ -83,9 +83,16 @@ const ActiveFilters = ({ filters, onRemoveFilter, onClearAll, darkMode = false }
 
   // Transaction types filter
   if (filters.transactionTypes.length > 0) {
+    // Map category IDs to display labels
+    const categoryLabels = {
+      'administrative': 'Administrative',
+      'financial': 'Financial'
+    };
+    
     const typeValue = filters.transactionTypes.length === 1
-      ? filters.transactionTypes[0]
-      : `${filters.transactionTypes.length} types`;
+      ? categoryLabels[filters.transactionTypes[0]] || filters.transactionTypes[0]
+      : filters.transactionTypes.map(id => categoryLabels[id] || id).join(', ');
+    
     filterTags.push({
       key: 'transactionTypes',
       label: 'Type',

@@ -34,9 +34,12 @@ export const applyFilters = (transactions, filters) => {
       }
     }
     
-    // Transaction type filter
+    // Transaction type filter (Administrative vs Financial)
     if (filters.transactionTypes && filters.transactionTypes.length > 0) {
-      if (!filters.transactionTypes.includes(transaction.transactionType)) {
+      const isAdministrative = transaction.isAdministrative === true;
+      const categoryId = isAdministrative ? 'administrative' : 'financial';
+      
+      if (!filters.transactionTypes.includes(categoryId)) {
         return false;
       }
     }

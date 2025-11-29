@@ -8,7 +8,7 @@ import AmountRangeFilter from './AmountRangeFilter';
 import ActiveFilters from './ActiveFilters';
 import { useFilters } from '../../context/FilterContext';
 import { countActiveFilters } from '../../types/filters';
-import { getUniqueTransactionTypes, getUniqueFolioNumbers } from '../../utils/filterUtils';
+import { getUniqueFolioNumbers } from '../../utils/filterUtils';
 
 /**
  * FilterPanel component - Container for all filter controls
@@ -45,11 +45,6 @@ const FilterPanel = ({ darkMode = false, collapsible = true }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [filters, clearFilters]);
-
-  // Memoize unique transaction types extraction
-  const availableTypes = useMemo(() => {
-    return getUniqueTransactionTypes(allTransactions);
-  }, [allTransactions]);
 
   // Memoize unique folio numbers extraction
   const availableFolios = useMemo(() => {
@@ -192,7 +187,6 @@ const FilterPanel = ({ darkMode = false, collapsible = true }) => {
         <TransactionTypeFilter
           value={filters.transactionTypes}
           onChange={handleTransactionTypesChange}
-          availableTypes={availableTypes}
           darkMode={darkMode}
         />
 

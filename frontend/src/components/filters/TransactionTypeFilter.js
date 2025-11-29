@@ -1,30 +1,27 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import './TransactionTypeFilter.css';
 
-const TransactionTypeFilter = ({ value = [], onChange, availableTypes = [], darkMode }) => {
+const TransactionTypeFilter = ({ value = [], onChange, darkMode }) => {
   const selectedTypes = value || [];
 
-  /**
-   * Get unique transaction types from available types
-   */
-  const uniqueTypes = useMemo(() => {
-    return [...new Set(availableTypes)].sort();
-  }, [availableTypes]);
+  // Define the two transaction categories
+  const transactionCategories = [
+    { id: 'administrative', label: 'Administrative' },
+    { id: 'financial', label: 'Financial' }
+  ];
 
   /**
-   * Check if all types are selected
+   * Check if all categories are selected
    */
-  const allSelected = useMemo(() => {
-    return uniqueTypes.length > 0 && selectedTypes.length === uniqueTypes.length;
-  }, [uniqueTypes, selectedTypes]);
+  const allSelected = selectedTypes.length === transactionCategories.length;
 
   /**
    * Handle individual checkbox change
    */
-  const handleTypeToggle = (type) => {
-    const newSelectedTypes = selectedTypes.includes(type)
-      ? selectedTypes.filter(t => t !== type)
-      : [...selectedTypes, type];
+  const handleTypeToggle = (categoryId) => {
+    const newSelectedTypes = selectedTypes.includes(categoryId)
+      ? selectedTypes.filter(t => t !== categoryId)
+      : [...selectedTypes, categoryId];
     
     onChange(newSelectedTypes);
   };
@@ -33,7 +30,7 @@ const TransactionTypeFilter = ({ value = [], onChange, availableTypes = [], dark
    * Handle Select All
    */
   const handleSelectAll = () => {
-    onChange([...uniqueTypes]);
+    onChange(transactionCategories.map(cat => cat.id));
   };
 
   /**
@@ -82,24 +79,20 @@ const TransactionTypeFilter = ({ value = [], onChange, availableTypes = [], dark
         </button>
       </div>
 
-      <div className="checkbox-group" role="group" aria-label="Transaction type options">
-        {uniqueTypes.length === 0 ? (
-          <div className="no-types-message" role="status">No transaction types available</div>
-        ) : (
-          uniqueTypes.map(type => (
-            <label key={type} className="checkbox-label">
-              <input
-                type="checkbox"
-                className="checkbox-input"
-                checked={selectedTypes.includes(type)}
-                onChange={() => handleTypeToggle(type)}
-                aria-label={`Filter by ${type}`}
-                aria-checked={selectedTypes.includes(type)}
-              />
-              <span className="checkbox-text">{type}</span>
-            </label>
-          ))
-        )}
+      <div className="checkbox-group" role="group" aria-label="Transaction category options">
+        {transactionCategories.map(category => (
+          <label key={category.id} className="checkbox-label">
+            <input
+              type="checkbox"
+              className="checkbox-input"
+              checked={selectedTypes.includes(category.id)}
+              onChange={() => handleTypeToggle(category.id)}
+              aria-label={`Filter by ${category.label} transactions`}
+              aria-checked={selectedTypes.includes(category.id)}
+            />
+            <span className="checkbox-text">{category.label}</span>
+          </label>
+        ))}
       </div>
     </div>
   );
