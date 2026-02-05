@@ -1,0 +1,160 @@
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-height: 200px;
+}
+
+.empty-state.dark-mode {
+  background: rgba(30, 30, 50, 0.95);
+  color: #ffffff;
+}
+
+.empty-state-content {
+  max-width: 500px;
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4472C4;
+  margin-bottom: 0.75rem;
+}
+
+.empty-state.dark-mode .empty-state-title {
+  color: #7B9FFF;
+}
+
+.empty-state-message {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state.dark-mode .empty-state-message {
+  color: #aaa;
+}
+
+.empty-state-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Specific empty state types */
+.empty-state.no-data .empty-state-icon {
+  opacity: 0.5;
+}
+
+.empty-state.no-results .empty-state-icon {
+  opacity: 0.6;
+}
+
+.empty-state.limited-data {
+  background: rgba(255, 248, 220, 0.95);
+  border: 2px solid #FFA500;
+}
+
+.empty-state.limited-data.dark-mode {
+  background: rgba(51, 46, 30, 0.95);
+  border-color: #FFB84D;
+}
+
+.empty-state.limited-data .empty-state-title {
+  color: #FF8C00;
+}
+
+.empty-state.limited-data.dark-mode .empty-state-title {
+  color: #FFB84D;
+}
+
+.empty-state.limited-data .empty-state-message {
+  color: #B8860B;
+}
+
+.empty-state.limited-data.dark-mode .empty-state-message {
+  color: #DDD;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .empty-state {
+    padding: 2rem 1rem;
+    min-height: 150px;
+  }
+
+  .empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state-title {
+    font-size: 1.25rem;
+  }
+
+  .empty-state-message {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .empty-state {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .empty-state-icon {
+    font-size: 2.5rem;
+  }
+
+  .empty-state-title {
+    font-size: 1.1rem;
+  }
+
+  .empty-state-message {
+    font-size: 0.85rem;
+  }
+
+  .empty-state-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Clear filters button */
+.clear-filters-btn {
+  background: #4472C4;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #365A9B;
+}
+
+.empty-state.dark-mode .clear-filters-btn {
+  background: #7B9FFF;
+}
+
+.empty-state.dark-mode .clear-filters-btn:hover {
+  background: #6B8FEF;
+}

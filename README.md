@@ -27,7 +27,20 @@
 - 🎨 **Dark Mode** - Easy on the eyes interface
 - ⚡ **Real-time Progress** - Live extraction progress tracking
 
-### Filtering & Search (NEW in v1.5.0)
+### Data Visualization Dashboard (NEW in v1.6.0)
+- 📊 **Interactive Dashboard** - Visual charts and graphs for portfolio analysis
+- 📈 **Performance Metrics** - Key indicators: total investment, current value, gains/losses, percentage return
+- 🥧 **Portfolio Allocation Chart** - Pie chart showing investment distribution across schemes
+- 📉 **Transaction Timeline** - Line chart displaying transaction history over time
+- 📊 **Transaction Type Distribution** - Bar/pie chart showing transaction type breakdown
+- 📅 **Monthly Investment Trends** - Bar chart tracking monthly investment patterns
+- 🎯 **Click-to-Filter** - Click on any chart element to filter the transaction table
+- 📸 **Chart Export** - Export individual charts or entire dashboard as PNG images
+- 📱 **Responsive Design** - Charts adapt to mobile, tablet, and desktop screens
+- 🌙 **Dark Mode Support** - Dashboard fully supports dark theme
+- 🔄 **View Toggle** - Switch seamlessly between dashboard and table views
+
+### Filtering & Search (v1.5.0)
 - 🔎 **Advanced Search** - Search transactions by scheme name with real-time results
 - 📅 **Date Range Filter** - Filter transactions by custom date ranges
 - 🏷️ **Transaction Type Filter** - Filter by purchase, redemption, SIP, and more
@@ -41,6 +54,15 @@
 
 ## 📸 Screenshots
 
+### Dashboard Interface
+![Dashboard Interface](docs/screenshots/dashboard.png)
+
+### Portfolio Allocation Chart
+![Portfolio Allocation](docs/screenshots/portfolio-allocation.png)
+
+### Transaction Timeline Chart
+![Transaction Timeline](docs/screenshots/transaction-timeline.png)
+
 ### Upload Interface
 ![Upload Interface](docs/screenshots/upload.png)
 
@@ -53,6 +75,8 @@
 
 ### Frontend
 - **React 18** - Modern UI framework
+- **Recharts** - Interactive chart library for data visualization
+- **html2canvas** - Chart export functionality
 - **Axios** - HTTP client for API calls
 - **CSS3** - Animations and responsive design
 
@@ -113,12 +137,17 @@ Frontend runs on: http://localhost:3000
 2. Upload your CAS PDF file (drag & drop or click)
 3. Enter password if the PDF is protected
 4. Click "Extract & Generate Excel"
-5. **Filter and search** through extracted transactions (NEW)
+5. **Explore your data visually** (NEW in v1.6.0)
+   - Switch to Dashboard view to see interactive charts
+   - View portfolio allocation, transaction timeline, and performance metrics
+   - Click on chart elements to filter data
+   - Export individual charts or entire dashboard as images
+6. **Filter and search** through extracted transactions
    - Use search bar to find specific schemes
    - Apply date range, transaction type, folio, or amount filters
    - Combine multiple filters for precise analysis
    - View active filters and remove them individually
-6. Download the generated Excel report (filtered or complete data)
+7. Download the generated Excel report (filtered or complete data)
 
 ---
 
@@ -157,7 +186,21 @@ Complete structured data with:
 
 ---
 
-## 🆕 What's New in v1.5.0
+## 🆕 What's New in v1.6.0
+
+### Data Visualization Dashboard
+- **Interactive Charts**: Visual representation of portfolio data with 5 chart types
+- **Performance Metrics**: Key indicators displayed as metric cards (total investment, current value, gains/losses, percentage return)
+- **Portfolio Allocation Chart**: Pie chart showing investment distribution across schemes with click-to-filter
+- **Transaction Timeline**: Line chart displaying transaction history over time with zoom functionality
+- **Transaction Type Distribution**: Bar chart showing breakdown by transaction type
+- **Monthly Investment Trends**: Bar chart tracking monthly investment patterns with year selection
+- **Chart Export**: Export individual charts or entire dashboard as PNG images
+- **Responsive Design**: Charts adapt seamlessly to mobile, tablet, and desktop screens
+- **Dark Mode Support**: Full dark theme compatibility for all charts
+- **View Toggle**: Switch between dashboard and table views while preserving filter state
+
+### Previous Updates (v1.5.0)
 
 ### Advanced Filtering & Search
 - **Interactive Data Filtering**: Filter extracted transactions before export
@@ -195,12 +238,16 @@ Complete structured data with:
 ```bash
 cd backend
 npm test
+
+cd ../frontend
+npm test
 ```
 
 ### Test Coverage
 - **70+ Unit Tests** - Core functionality and filtering
 - **59 Property-Based Tests** - 5,900+ generated test cases
 - **16 Integration Tests** - Full pipeline validation
+- **18 Dashboard Property Tests** - Chart correctness and performance validation
 
 ---
 
@@ -218,6 +265,10 @@ ITR_Complete/
 ├── frontend/                   # React frontend
 │   ├── src/
 │   │   ├── components/        # React components
+│   │   │   ├── filters/      # Filter components
+│   │   │   └── table/        # Table components
+│   │   ├── context/          # React context providers
+│   │   ├── utils/            # Utility functions
 │   │   └── App.js            # Main app
 │   └── public/               # Static assets
 ├── docs/                      # Documentation
@@ -306,11 +357,14 @@ For issues and questions:
 
 - [ ] Support for multiple CAS formats
 - [x] Advanced filtering and search (v1.5.0)
-- [ ] Data visualization dashboard
+- [x] Data visualization dashboard (v1.6.0)
 - [ ] Export to other formats (CSV, PDF)
 - [ ] Batch processing support
 - [ ] Saved filter presets
 - [ ] Column sorting and custom views
+- [ ] Dashboard customization and saved layouts
+- [ ] Real-time portfolio tracking
+- [ ] Comparative analysis tools
 
 ---
 

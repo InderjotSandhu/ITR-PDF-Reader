@@ -1,0 +1,98 @@
+.view-toggle {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 4px;
+}
+
+.view-toggle.dark-mode {
+  background: rgba(30, 30, 50, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.view-toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.view-toggle.dark-mode .view-toggle-button {
+  color: #aaa;
+}
+
+.view-toggle-button:hover:not(.active) {
+  background: rgba(68, 114, 196, 0.1);
+  color: #4472C4;
+}
+
+.view-toggle.dark-mode .view-toggle-button:hover:not(.active) {
+  background: rgba(123, 159, 255, 0.15);
+  color: #7B9FFF;
+}
+
+.view-toggle-button.active {
+  background: #4472C4;
+  color: white;
+  box-shadow: 0 2px 6px rgba(68, 114, 196, 0.3);
+}
+
+.view-toggle.dark-mode .view-toggle-button.active {
+  background: #7B9FFF;
+  box-shadow: 0 2px 6px rgba(123, 159, 255, 0.3);
+}
+
+.view-toggle-button:focus {
+  outline: 2px solid #4472C4;
+  outline-offset: 2px;
+}
+
+.view-toggle.dark-mode .view-toggle-button:focus {
+  outline-color: #7B9FFF;
+}
+
+.view-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.view-label {
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .view-toggle-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .view-icon {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .view-toggle-button {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .view-label {
+    display: none;
+  }
+  
+  .view-icon {
+    font-size: 1.25rem;
+  }
+}

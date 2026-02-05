@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { createEmptyFilterState } from '../types/filters';
 import { applyFilters } from '../utils/filterUtils';
 
@@ -15,13 +15,45 @@ import { applyFilters } from '../utils/filterUtils';
 const FilterContext = createContext(undefined);
 
 /**
+ * Debounce utility function
+ * @param {Function} func - Function to debounce
+ * @param {number} delay - Delay in milliseconds
+ * @returns {Function} Debounced function
+ */
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
+
+/**
  * FilterProvider component that manages filter state and filtered transactions
  * @param {Object} props
  * @param {React.ReactNode} props.children - Child components
  * @param {import('../types/filters').Transaction[]} props.transactions - All transactions to filter
  */
 export const FilterProvider = ({ children, transactions = [] }) => {
-  const [filters, setFilters] = useState(createEmptyFilterState());
+  const [filters, setFiltersInternal] = useState(createEmptyFilterState());
+  const [debouncedFilters, setDebouncedFilters] = useState(createEmptyFilterState());
+  
+  // Create a ref for the debounced function to avoid recreating it
+  const debouncedSetFilters = useRef(
+    debounce((newFilters) => {
+      setDebouncedFilters(newFilters);
+    }, 300)
+  ).current;
+
+  // Update debounced filters when filters change
+  useEffect(() => {
+    debouncedSetFilters(filters);
+  }, [filters, debouncedSetFilters]);
+
+  // Wrapper function to set filters (immediate update for UI, debounced for filtering)
+  const setFilters = useCallback((newFilters) => {
+    setFiltersInternal(newFilters);
+  }, []);
 
   // Debug logging
   React.useEffect(() => {
@@ -38,24 +70,26 @@ export const FilterProvider = ({ children, transactions = [] }) => {
     return Array.isArray(transactions) ? transactions : [];
   }, [transactions]);
 
-  // Memoize filtered transactions to avoid unnecessary recalculations
+  // Memoize filtered transactions using debounced filters to avoid excessive recalculations
   const filteredTransactions = useMemo(() => {
-    return applyFilters(safeTransactions, filters);
-  }, [safeTransactions, filters]);
+    return applyFilters(safeTransactions, debouncedFilters);
+  }, [safeTransactions, debouncedFilters]);
 
   /**
    * Clear all filters and reset to empty state
    */
-  const clearFilters = () => {
-    setFilters(createEmptyFilterState());
-  };
+  const clearFilters = useCallback(() => {
+    const emptyState = createEmptyFilterState();
+    setFiltersInternal(emptyState);
+    setDebouncedFilters(emptyState);
+  }, []);
 
   /**
    * Remove a specific filter by key
    * @param {string} filterKey - The filter key to remove (dateRange, transactionTypes, searchQuery, folioNumber, amountRange)
    */
-  const removeFilter = (filterKey) => {
-    setFilters(prevFilters => {
+  const removeFilter = useCallback((filterKey) => {
+    setFiltersInternal(prevFilters => {
       const newFilters = { ...prevFilters };
       
       switch (filterKey) {
@@ -80,7 +114,7 @@ export const FilterProvider = ({ children, transactions = [] }) => {
       
       return newFilters;
     });
-  };
+  }, []);
 
   const value = {
     filters,

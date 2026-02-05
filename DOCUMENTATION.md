@@ -15,15 +15,16 @@
 4. [Using the Application](#using-the-application)
 5. [Features](#features)
 6. [Filtering and Search](#filtering-and-search)
-7. [Output Formats](#output-formats)
-8. [API Documentation](#api-documentation)
-9. [Architecture](#architecture)
-10. [File Structure](#file-structure)
-11. [Commands Reference](#commands-reference)
-12. [Troubleshooting](#troubleshooting)
-13. [Development](#development)
-14. [Testing](#testing)
-15. [Contributing](#contributing)
+7. [Data Visualization Dashboard](#data-visualization-dashboard)
+8. [Output Formats](#output-formats)
+9. [API Documentation](#api-documentation)
+10. [Architecture](#architecture)
+11. [File Structure](#file-structure)
+12. [Commands Reference](#commands-reference)
+13. [Troubleshooting](#troubleshooting)
+14. [Development](#development)
+15. [Testing](#testing)
+16. [Contributing](#contributing)
 
 ---
 
@@ -174,7 +175,13 @@ You can now view itr-complete-frontend in the browser.
    - Watch real-time progress
    - Wait for completion
 
-7. **Filter and Search** (optional, NEW in v1.5.0)
+7. **Explore your data visually** (NEW in v1.6.0)
+   - Switch to Dashboard view to see interactive charts
+   - View portfolio allocation, transaction timeline, and performance metrics
+   - Click on chart elements to filter data
+   - Export individual charts or entire dashboard as images
+
+8. **Filter and Search** (optional, v1.5.0)
    - Use search bar to find specific schemes
    - Apply date range filter for specific time periods
    - Select transaction types to filter
@@ -183,7 +190,7 @@ You can now view itr-complete-frontend in the browser.
    - Combine multiple filters for precise analysis
    - View and remove active filters using tags
 
-8. **Download Report**
+9. **Download Report**
    - File downloads automatically (filtered or complete data)
    - Check your Downloads folder
 
@@ -596,6 +603,404 @@ Active Filters (3):
 
 ---
 
+## 📊 Data Visualization Dashboard
+
+### Overview
+
+The Data Visualization Dashboard (v1.6.0) provides interactive charts and graphs to visualize your mutual fund portfolio data. This feature transforms raw transaction data into meaningful visual insights, making it easier to understand your investment patterns, portfolio allocation, and performance trends.
+
+### Accessing the Dashboard
+
+1. **Extract CAS Data**: Upload and extract your CAS PDF first
+2. **Switch Views**: Click the "Dashboard" toggle button (top-right)
+3. **Explore Charts**: Interact with 5 different chart types
+4. **Filter Data**: All existing filters work with dashboard charts
+5. **Export Charts**: Download individual charts or entire dashboard
+
+### Dashboard Layout
+
+The dashboard displays 5 main sections:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                  Performance Metrics                     │
+│  [Total Investment] [Current Value] [Gains] [% Return]   │
+├─────────────────────────────────────────────────────────┤
+│  Portfolio Allocation    │    Transaction Timeline       │
+│     (Pie Chart)         │      (Line Chart)            │
+├─────────────────────────────────────────────────────────┤
+│  Transaction Types      │    Monthly Trends             │
+│    (Bar Chart)         │      (Bar Chart)              │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Chart Types and Features
+
+#### 1. Performance Metrics Panel
+
+**Purpose**: Display key financial indicators at a glance
+
+**Metrics Displayed**:
+- **Total Investment**: Sum of all purchases and SIPs minus redemptions
+- **Current Value**: Latest market value from portfolio data
+- **Absolute Gains/Losses**: Current Value - Total Investment
+- **Percentage Return**: ((Current Value - Total Investment) / Total Investment) × 100
+
+**Visual Features**:
+- Color-coded values (Green: positive, Red: negative, Blue: neutral)
+- Large, easy-to-read numbers
+- Currency formatting (₹ symbol)
+- Responsive card layout
+
+**Use Cases**:
+- Quick portfolio health check
+- Performance assessment
+- Investment return analysis
+
+#### 2. Portfolio Allocation Chart
+
+**Chart Type**: Pie Chart (Donut style)
+
+**Purpose**: Visualize investment distribution across different mutual fund schemes
+
+**Features**:
+- Each scheme represented as a colored segment
+- Percentage and value displayed on hover
+- Schemes with >10 entries grouped into "Others"
+- Sorted by market value (largest first)
+
+**Interactions**:
+- **Hover**: Shows scheme name, market value, and percentage
+- **Click**: Filters transaction table to show only that scheme
+- **Legend**: Click to toggle scheme visibility
+
+**Export**: Individual chart export as PNG
+
+**Use Cases**:
+- Understand portfolio diversification
+- Identify largest holdings
+- Spot concentration risks
+- Quick scheme-wise filtering
+
+#### 3. Transaction Timeline Chart
+
+**Chart Type**: Line Chart with Area Fill
+
+**Purpose**: Display transaction history over time to identify investment patterns
+
+**Features**:
+- Time-based X-axis (monthly/quarterly aggregation)
+- Separate lines for purchases and redemptions
+- Net investment calculation (purchases - redemptions)
+- Zoom functionality for detailed time periods
+- Responsive time granularity based on data density
+
+**Interactions**:
+- **Hover**: Shows date, transaction count, and amounts
+- **Click**: Filters transactions for that time period
+- **Zoom**: Mouse wheel or zoom controls
+- **Reset Zoom**: Double-click or reset button
+
+**Export**: Chart export with current zoom state
+
+**Use Cases**:
+- Track investment discipline over time
+- Identify investment patterns (seasonal, periodic)
+- Analyze cash flow trends
+- Find specific time periods for detailed analysis
+
+#### 4. Transaction Type Distribution Chart
+
+**Chart Type**: Bar Chart (Horizontal or Vertical)
+
+**Purpose**: Show breakdown of transactions by type (Purchase, SIP, Redemption, etc.)
+
+**Features**:
+- Count and total amount for each transaction type
+- Color-coded bars for different types
+- Administrative transactions handled separately
+- Toggle to show/hide administrative transactions
+
+**Interactions**:
+- **Hover**: Shows transaction type, count, and total amount
+- **Click**: Filters table to show only that transaction type
+- **Admin Toggle**: Show/hide administrative transactions
+
+**Export**: Individual chart export
+
+**Use Cases**:
+- Understand investment behavior
+- Analyze transaction patterns
+- Separate investment vs administrative activities
+- Quick type-based filtering
+
+#### 5. Monthly Investment Trends Chart
+
+**Chart Type**: Grouped Bar Chart
+
+**Purpose**: Track monthly investment patterns and discipline
+
+**Features**:
+- Monthly bars showing purchases, redemptions, and net investment
+- Year selection dropdown for multi-year data
+- Stacked or grouped bar display
+- Missing months shown as zero
+
+**Interactions**:
+- **Hover**: Shows month, purchases, redemptions, net investment
+- **Click**: Filters transactions for that specific month
+- **Year Selection**: Dropdown to filter by year
+- **All Years**: Option to view complete timeline
+
+**Export**: Individual chart export
+
+**Use Cases**:
+- Track monthly investment discipline
+- Identify seasonal patterns
+- Analyze SIP consistency
+- Find specific months for detailed review
+
+### Chart Interactions
+
+#### Universal Interactions
+
+**Hover Effects**:
+- All charts show detailed tooltips on hover
+- Smooth animations and highlighting
+- Context-sensitive information display
+
+**Click-to-Filter**:
+- Click any chart element to filter the transaction table
+- Applied filters shown as active filter tags
+- Combine with existing filters for precise analysis
+- One-click filter removal from tags
+
+**Responsive Design**:
+- Charts automatically resize for screen size
+- Mobile: Vertical stack layout
+- Tablet: 2-column grid
+- Desktop: Multi-column layout
+- Touch-friendly interactions on mobile
+
+#### Chart-Specific Interactions
+
+**Portfolio Allocation**:
+- Click segment → Filter by scheme
+- Click legend → Toggle scheme visibility
+- Hover → Show detailed allocation info
+
+**Transaction Timeline**:
+- Click data point → Filter by date range
+- Mouse wheel → Zoom in/out
+- Double-click → Reset zoom
+- Drag → Pan when zoomed
+
+**Transaction Types**:
+- Click bar → Filter by transaction type
+- Toggle → Show/hide administrative transactions
+
+**Monthly Trends**:
+- Click bar → Filter by month
+- Dropdown → Select year
+- Hover → Show monthly breakdown
+
+### Chart Export Features
+
+#### Individual Chart Export
+
+**How to Export**:
+1. Hover over any chart
+2. Click the export button (📸 icon)
+3. Chart downloads as PNG image
+
+**Export Features**:
+- High-resolution PNG format
+- Includes chart title and timestamp
+- Maintains current chart state (zoom, filters)
+- Optimized for presentations and reports
+
+#### Bulk Dashboard Export
+
+**How to Export**:
+1. Click "Export All Charts" button
+2. System captures all charts sequentially
+3. Downloads ZIP file with all images
+
+**ZIP Contents**:
+- `metrics-panel.png` - Performance metrics
+- `portfolio-allocation.png` - Pie chart
+- `transaction-timeline.png` - Line chart
+- `transaction-types.png` - Bar chart
+- `monthly-trends.png` - Monthly bar chart
+- `dashboard-metadata.json` - Export information
+
+### Dark Mode Support
+
+**Automatic Theme Detection**:
+- Charts automatically adapt to system dark mode
+- Manual toggle available in application
+- Smooth transitions between themes
+
+**Dark Mode Features**:
+- Light text on dark backgrounds
+- High contrast color schemes
+- WCAG AA accessibility compliance
+- Optimized chart colors for dark theme
+
+### Responsive Design
+
+#### Mobile (< 768px)
+- Vertical stack layout
+- Touch-friendly interactions
+- Simplified tooltips
+- Swipe gestures for navigation
+
+#### Tablet (768px - 1024px)
+- 2-column grid layout
+- Optimized chart sizes
+- Touch and mouse support
+
+#### Desktop (> 1024px)
+- Multi-column layout
+- Full feature set
+- Keyboard shortcuts
+- Advanced interactions
+
+### Performance Optimization
+
+#### Data Processing
+- Memoized calculations for large datasets
+- Debounced filter updates (300ms)
+- Virtual scrolling for large legends
+- Web Workers for heavy computations (>5000 transactions)
+
+#### Rendering
+- Lazy loading of chart components
+- React.memo for chart optimization
+- Code splitting for dashboard bundle
+- Progressive loading indicators
+
+#### Memory Management
+- Automatic cleanup of chart instances
+- Efficient data structures
+- Garbage collection optimization
+
+### Accessibility Features
+
+#### Keyboard Navigation
+- Tab through all interactive elements
+- Enter/Space to activate buttons
+- Arrow keys for chart navigation
+- Escape to close modals/tooltips
+
+#### Screen Reader Support
+- ARIA labels for all charts
+- Descriptive alt text for exports
+- Live regions for dynamic updates
+- Semantic HTML structure
+
+#### Visual Accessibility
+- High contrast color schemes
+- Colorblind-friendly palettes
+- Sufficient contrast ratios (WCAG AA)
+- Pattern/texture alternatives to color
+
+### Filter Integration
+
+#### How Filters Affect Charts
+
+**Real-time Updates**:
+- All charts update immediately when filters are applied
+- Visual indicator shows when charts are filtered
+- Filter metadata included in exports
+
+**Filter Preservation**:
+- Switching between dashboard and table views preserves filters
+- Chart interactions add to existing filters
+- Clear all filters resets both views
+
+**Performance with Filters**:
+- Filtered datasets render faster
+- Optimized for common filter combinations
+- Smooth transitions during filter changes
+
+### Troubleshooting Dashboard Issues
+
+#### Issue: "Charts not loading"
+**Solutions**:
+- Ensure data is extracted first
+- Check browser JavaScript is enabled
+- Refresh page and try again
+- Clear browser cache
+- Check browser console for errors
+
+#### Issue: "Charts showing wrong data"
+**Solutions**:
+- Verify filters are applied correctly
+- Check active filter tags
+- Clear all filters and reapply
+- Re-extract CAS data if needed
+
+#### Issue: "Export not working"
+**Solutions**:
+- Ensure browser allows downloads
+- Check popup blocker settings
+- Try individual chart export first
+- Disable browser extensions temporarily
+
+#### Issue: "Charts not responsive on mobile"
+**Solutions**:
+- Refresh page on mobile device
+- Check viewport meta tag
+- Try landscape orientation
+- Update browser to latest version
+
+#### Issue: "Dark mode colors not working"
+**Solutions**:
+- Toggle dark mode off and on
+- Refresh page after theme change
+- Check system theme settings
+- Clear browser cache
+
+#### Issue: "Click-to-filter not working"
+**Solutions**:
+- Ensure you're clicking on chart elements (not empty space)
+- Check that transaction table is visible
+- Verify data exists for clicked element
+- Try clearing existing filters first
+
+#### Issue: "Performance issues with large datasets"
+**Solutions**:
+- Apply filters to reduce dataset size
+- Close other browser tabs
+- Use latest browser version
+- Consider data aggregation for very large datasets (>10,000 transactions)
+
+### Tips for Effective Dashboard Use
+
+#### Getting Started
+1. **Start with Metrics**: Check performance metrics first
+2. **Explore Allocation**: Understand your portfolio distribution
+3. **Review Timeline**: Look for investment patterns over time
+4. **Analyze Types**: Check transaction type distribution
+5. **Track Trends**: Monitor monthly investment discipline
+
+#### Advanced Analysis
+1. **Combine Filters**: Use dashboard + table view together
+2. **Export for Reports**: Create visual reports with exported charts
+3. **Time-based Analysis**: Use timeline zoom for detailed periods
+4. **Comparative Analysis**: Switch between filtered and unfiltered views
+5. **Mobile Analysis**: Use mobile view for quick checks on-the-go
+
+#### Best Practices
+- **Regular Monitoring**: Check dashboard monthly after new transactions
+- **Filter Combinations**: Use multiple filters for precise analysis
+- **Export Documentation**: Save charts for investment reviews
+- **Performance Tracking**: Monitor metrics trends over time
+- **Diversification Review**: Use allocation chart to check portfolio balance
+
+---
+
 ## 📊 Output Formats
 
 ### 1. Excel Format (.xlsx)
@@ -980,6 +1385,150 @@ npm install
 - Check that end date is after start date
 - Ensure dates are within your data range
 - Clear and re-apply date filter
+
+### Dashboard Issues (v1.6.0)
+
+#### Issue: "Dashboard not loading or showing blank charts"
+**Causes**:
+- Data not extracted yet
+- JavaScript disabled
+- Browser compatibility issues
+- Chart library loading failure
+
+**Solution**:
+- Ensure CAS data is extracted first
+- Check browser JavaScript is enabled
+- Try refreshing the page
+- Clear browser cache and cookies
+- Update browser to latest version
+- Check browser console for error messages
+
+#### Issue: "Charts showing incorrect or missing data"
+**Causes**:
+- Filters applied incorrectly
+- Data processing errors
+- Browser memory issues
+
+**Solution**:
+- Check active filter tags at top of page
+- Clear all filters and reapply
+- Refresh page and re-extract data if needed
+- Try with smaller dataset (apply date filter)
+- Check browser console for errors
+
+#### Issue: "Chart export not working"
+**Causes**:
+- Browser blocking downloads
+- Popup blocker enabled
+- Insufficient browser permissions
+- Chart rendering issues
+
+**Solution**:
+- Allow downloads in browser settings
+- Disable popup blocker for the site
+- Try individual chart export first
+- Check browser download folder
+- Disable browser extensions temporarily
+- Try different browser
+
+#### Issue: "Charts not responsive on mobile/tablet"
+**Causes**:
+- Viewport configuration issues
+- CSS loading problems
+- Touch interaction conflicts
+
+**Solution**:
+- Refresh page on mobile device
+- Try landscape orientation
+- Check if CSS files loaded properly
+- Update mobile browser
+- Clear mobile browser cache
+- Try desktop version on mobile
+
+#### Issue: "Dark mode colors not displaying correctly"
+**Causes**:
+- Theme toggle not working
+- CSS conflicts
+- Browser theme detection issues
+
+**Solution**:
+- Toggle dark mode off and on manually
+- Refresh page after theme change
+- Check system theme settings
+- Clear browser cache
+- Disable browser extensions
+- Try incognito/private mode
+
+#### Issue: "Click-to-filter not working on charts"
+**Causes**:
+- Clicking on wrong area
+- JavaScript event conflicts
+- Filter system errors
+
+**Solution**:
+- Click directly on chart elements (bars, segments, points)
+- Avoid clicking on empty chart areas
+- Ensure transaction table is visible
+- Clear existing filters first
+- Check that data exists for clicked element
+- Refresh page if interactions stop working
+
+#### Issue: "Performance issues with dashboard (slow loading/laggy)"
+**Causes**:
+- Large dataset (>5000 transactions)
+- Browser memory limitations
+- Multiple browser tabs open
+- Outdated browser
+
+**Solution**:
+- Apply date range filter to reduce dataset size
+- Close other browser tabs
+- Use latest browser version
+- Increase browser memory allocation
+- Try on desktop instead of mobile
+- Consider using filtered data for analysis
+
+#### Issue: "Zoom functionality not working on timeline chart"
+**Causes**:
+- Mouse/trackpad issues
+- Browser zoom conflicts
+- Chart interaction disabled
+
+**Solution**:
+- Try mouse wheel scroll on chart area
+- Use zoom controls if available
+- Double-click chart to reset zoom
+- Check browser zoom level (should be 100%)
+- Try keyboard shortcuts (Ctrl + scroll)
+- Refresh page to reset chart state
+
+#### Issue: "Metrics showing wrong calculations"
+**Causes**:
+- Data extraction errors
+- Calculation logic issues
+- Filter effects on metrics
+
+**Solution**:
+- Verify source CAS PDF data
+- Check if filters are affecting calculations
+- Clear all filters to see unfiltered metrics
+- Re-extract CAS data
+- Compare with manual calculations
+- Report issue with sample data if persistent
+
+#### Issue: "Charts not updating when filters change"
+**Causes**:
+- Filter system disconnected
+- React state issues
+- Browser performance problems
+
+**Solution**:
+- Refresh the page
+- Clear all filters and reapply
+- Switch to table view and back to dashboard
+- Check browser console for errors
+- Try different filter combinations
+- Restart browser if needed
 
 ---
 

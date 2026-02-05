@@ -1,0 +1,236 @@
+.portfolio-allocation-chart {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portfolio-allocation-chart.dark-mode {
+  background: #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chart-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333333;
+  transition: color 0.3s ease;
+}
+
+.portfolio-allocation-chart.dark-mode .chart-header h3 {
+  color: #e0e0e0;
+}
+
+.export-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.export-button:hover {
+  background: #45a049;
+}
+
+.export-button:active {
+  transform: scale(0.98);
+}
+
+.portfolio-allocation-chart.dark-mode .export-button {
+  background: #388E3C;
+}
+
+.portfolio-allocation-chart.dark-mode .export-button:hover {
+  background: #2E7D32;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 400px;
+}
+
+.chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #999999;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.chart-empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.portfolio-allocation-chart.dark-mode .chart-empty-state {
+  color: #666666;
+}
+
+/* Single scheme display */
+.single-scheme-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.single-scheme-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.single-scheme-percentage {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.single-scheme-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.portfolio-allocation-chart.dark-mode .single-scheme-info h4 {
+  color: #e0e0e0;
+}
+
+.single-scheme-info p {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.portfolio-allocation-chart.dark-mode .single-scheme-info p {
+  color: #b0b0b0;
+}
+
+/* Custom Tooltip Styles */
+.custom-tooltip {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.custom-tooltip.dark-mode {
+  background: rgba(42, 42, 42, 0.95);
+  border-color: #555555;
+  color: #e0e0e0;
+}
+
+.tooltip-label {
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  font-size: 0.875rem;
+  color: #333333;
+}
+
+.custom-tooltip.dark-mode .tooltip-label {
+  color: #e0e0e0;
+}
+
+.tooltip-value,
+.tooltip-percentage {
+  margin: 4px 0;
+  font-size: 0.8125rem;
+  color: #666666;
+}
+
+.custom-tooltip.dark-mode .tooltip-value,
+.custom-tooltip.dark-mode .tooltip-percentage {
+  color: #b0b0b0;
+}
+
+.tooltip-percentage {
+  font-weight: 600;
+  color: #4CAF50;
+}
+
+.custom-tooltip.dark-mode .tooltip-percentage {
+  color: #66BB6A;
+}
+
+/* Hover Effects for Chart Elements */
+.recharts-pie-sector {
+  transition: opacity 0.2s ease;
+}
+
+.recharts-pie-sector:hover {
+  opacity: 0.8;
+  filter: brightness(1.1);
+}
+
+/* Responsive Design */
+/* Tablet breakpoint: < 768px */
+@media (max-width: 768px) {
+  .portfolio-allocation-chart {
+    padding: 16px;
+  }
+
+  .chart-header h3 {
+    font-size: 1.125rem;
+  }
+
+  .export-button {
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .chart-container {
+    min-height: 350px;
+  }
+}
+
+/* Mobile breakpoint: < 480px */
+@media (max-width: 480px) {
+  .portfolio-allocation-chart {
+    padding: 12px;
+  }
+
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .chart-header h3 {
+    font-size: 1rem;
+  }
+
+  .chart-container {
+    min-height: 300px;
+  }
+}

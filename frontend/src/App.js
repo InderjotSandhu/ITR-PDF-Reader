@@ -1,21 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import './App.css';
 import PDFUploader from './components/PDFUploader';
 import FilterPanel from './components/filters/FilterPanel';
 import TransactionTable from './components/table/TransactionTable';
+import ViewToggle from './components/ViewToggle';
 import { FilterProvider } from './context/FilterContext';
 import { useFilters } from './context/FilterContext';
+import { DashboardProvider, useDashboard } from './context/DashboardContext';
 import { createFilterMetadata } from './utils/filterMetadata';
 import axios from 'axios';
 
+// Lazy load Dashboard component for better performance
+const Dashboard = lazy(() => import('./components/Dashboard'));
+
 /**
- * FilterView component - Displays filtering interface and transaction table
- * Wrapped in its own component to use the FilterContext
+ * FilterView component - Displays filtering interface and transaction table/dashboard
+ * Wrapped in its own component to use the FilterContext and DashboardContext
  */
 const FilterView = ({ darkMode, extractedData, onExport, onStartOver, isExporting }) => {
   const { filteredTransactions, allTransactions, filters, clearFilters } = useFilters();
+  const { currentView, setView } = useDashboard();
   const [showExportOptions, setShowExportOptions] = useState(false);
   const dropdownRef = React.useRef(null);
+
+  // Check if filters are applied
+  const isFiltered = React.useMemo(() => {
+    return (
+      filters.searchQuery !== '' ||
+      filters.transactionTypes.length > 0 ||
+      filters.folioNumber !== null ||
+      (filters.dateRange.start !== null || filters.dateRange.end !== null) ||
+      (filters.amountRange.min !== null || filters.amountRange.max !== null)
+    );
+  }, [filters]);
 
   // Debug logging
   React.useEffect(() => {
@@ -95,19 +112,44 @@ const FilterView = ({ darkMode, extractedData, onExport, onStartOver, isExportin
         </div>
       </div>
 
+      <div className="view-toggle-container">
+        <ViewToggle
+          currentView={currentView}
+          onViewChange={setView}
+          darkMode={darkMode}
+        />
+      </div>
+
       <div className="filter-content">
         <aside className="filter-sidebar">
           <FilterPanel darkMode={darkMode} collapsible={true} />
         </aside>
         <main className="table-main">
-          <TransactionTable
-            transactions={filteredTransactions}
-            isLoading={false}
-            totalCount={allTransactions.length}
-            filteredCount={filteredTransactions.length}
-            darkMode={darkMode}
-            onClearFilters={clearFilters}
-          />
+          {currentView === 'table' ? (
+            <TransactionTable
+              transactions={filteredTransactions}
+              isLoading={false}
+              totalCount={allTransactions.length}
+              filteredCount={filteredTransactions.length}
+              darkMode={darkMode}
+              onClearFilters={clearFilters}
+            />
+          ) : (
+            <Suspense fallback={
+              <div className={`dashboard-loading ${darkMode ? 'dark-mode' : ''}`}>
+                <div className="loading-spinner"></div>
+                <p>Loading dashboard...</p>
+              </div>
+            }>
+              <Dashboard
+                transactions={filteredTransactions}
+                portfolioData={extractedData.portfolioData}
+                darkMode={darkMode}
+                loading={false}
+                isFiltered={isFiltered}
+              />
+            </Suspense>
+          )}
         </main>
       </div>
     </div>
@@ -270,13 +312,15 @@ function App() {
               </div>
             ) : (
               <FilterProvider transactions={extractedData.transactions}>
-                <FilterView
-                  darkMode={darkMode}
-                  extractedData={extractedData}
-                  onExport={handleExport}
-                  onStartOver={handleStartOver}
-                  isExporting={isExporting}
-                />
+                <DashboardProvider initialView="table">
+                  <FilterView
+                    darkMode={darkMode}
+                    extractedData={extractedData}
+                    onExport={handleExport}
+                    onStartOver={handleStartOver}
+                    isExporting={isExporting}
+                  />
+                </DashboardProvider>
               </FilterProvider>
             )}
           </>

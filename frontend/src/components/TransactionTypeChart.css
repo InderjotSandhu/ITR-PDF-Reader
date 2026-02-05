@@ -1,0 +1,284 @@
+.transaction-type-chart {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.transaction-type-chart.dark-mode {
+  background: #2a2a2a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.transaction-type-chart .chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.transaction-type-chart .chart-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333333;
+  transition: color 0.3s ease;
+}
+
+.transaction-type-chart.dark-mode .chart-header h3 {
+  color: #e0e0e0;
+}
+
+.transaction-type-chart .chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.transaction-type-chart .toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #666666;
+  user-select: none;
+}
+
+.transaction-type-chart.dark-mode .toggle-label {
+  color: #b0b0b0;
+}
+
+.transaction-type-chart .toggle-label input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.transaction-type-chart .export-button {
+  padding: 8px 16px;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.transaction-type-chart .export-button:hover {
+  background: #1976D2;
+}
+
+.transaction-type-chart.dark-mode .export-button {
+  background: #1976D2;
+}
+
+.transaction-type-chart.dark-mode .export-button:hover {
+  background: #1565C0;
+}
+
+.transaction-type-chart .chart-container {
+  width: 100%;
+  min-height: 400px;
+}
+
+.transaction-type-chart .chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: #999999;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.transaction-type-chart .chart-empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.transaction-type-chart.dark-mode .chart-empty-state {
+  color: #666666;
+}
+
+/* Single type display */
+.transaction-type-chart .single-type-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.transaction-type-chart .single-type-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.transaction-type-chart .single-type-percentage {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.transaction-type-chart .single-type-info h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.transaction-type-chart.dark-mode .single-type-info h4 {
+  color: #e0e0e0;
+}
+
+.transaction-type-chart .single-type-metrics {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.transaction-type-chart .single-type-metrics .metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  min-width: 200px;
+}
+
+.transaction-type-chart.dark-mode .single-type-metrics .metric {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.transaction-type-chart .single-type-metrics .label {
+  font-weight: 500;
+  color: #666;
+}
+
+.transaction-type-chart.dark-mode .single-type-metrics .label {
+  color: #b0b0b0;
+}
+
+.transaction-type-chart .single-type-metrics .value {
+  font-weight: 600;
+  color: #333;
+}
+
+.transaction-type-chart.dark-mode .single-type-metrics .value {
+  color: #e0e0e0;
+}
+
+.transaction-type-chart .custom-tooltip {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.transaction-type-chart .custom-tooltip.dark-mode {
+  background: rgba(42, 42, 42, 0.95);
+  border-color: #555555;
+  color: #e0e0e0;
+}
+
+.transaction-type-chart .custom-tooltip .tooltip-label {
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  color: #333333;
+}
+
+.transaction-type-chart .custom-tooltip.dark-mode .tooltip-label {
+  color: #e0e0e0;
+}
+
+.transaction-type-chart .custom-tooltip .tooltip-value {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #666666;
+}
+
+.transaction-type-chart .custom-tooltip.dark-mode .tooltip-value {
+  color: #b0b0b0;
+}
+
+.transaction-type-chart .custom-tooltip .tooltip-percentage {
+  margin: 4px 0 0 0;
+  font-size: 0.85rem;
+  color: #2196F3;
+  font-weight: 500;
+}
+
+.transaction-type-chart .custom-tooltip.dark-mode .tooltip-percentage {
+  color: #64B5F6;
+}
+
+/* Hover Effects for Chart Elements */
+.recharts-bar-rectangle {
+  transition: opacity 0.2s ease;
+}
+
+.recharts-bar-rectangle:hover {
+  opacity: 0.8;
+  filter: brightness(1.1);
+}
+
+/* Responsive design */
+/* Tablet breakpoint: < 768px */
+@media (max-width: 768px) {
+  .transaction-type-chart .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .transaction-type-chart .chart-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .transaction-type-chart .chart-container {
+    min-height: 350px;
+  }
+}
+
+/* Mobile breakpoint: < 480px */
+@media (max-width: 480px) {
+  .transaction-type-chart {
+    padding: 12px;
+  }
+
+  .transaction-type-chart .chart-header h3 {
+    font-size: 1rem;
+  }
+
+  .transaction-type-chart .chart-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .transaction-type-chart .export-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .transaction-type-chart .chart-container {
+    min-height: 300px;
+  }
+}
